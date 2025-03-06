@@ -7,7 +7,7 @@ public class Tax {
 
         System.out.println("Please enter the income:");
         double income = scanner.nextDouble();
-        double tax = 0;
+        double tax ;
 
         if ( income <= 50000) {
             tax = income * 0.01;
@@ -19,7 +19,7 @@ public class Tax {
             tax = income * 0.04;
         } else if (income > 250000 && income <= 500000) {
             tax = income * 0.05;
-        } else if (income > 500000 ) {
+        } else {
             tax = income * 0.06;
         }
         System.out.printf("your income tax is:$%.2f" , tax );
