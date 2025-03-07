@@ -6,5 +6,6 @@ public class E6_16 {   //Multiplication table
             }
             System.out.println();
         }
+
     }
 }
