@@ -41,35 +41,6 @@ public class Main_EX2_PM_2_1 {
                 break;
         }
 
-        int emptySpaces = 0;
-        for (int i = 0; i < k; i++) {
-            for (int j = 0; j < k; j++) {
-                if (hollowSquare[i][j] == ' ') {
-                    emptySpaces++;
-                }
-            }
-        }
-
-        int c;
-        do {
-            System.out.println("Please enter a number(c) for the number of dots in game:");
-            c = scanner.nextInt();
-            if (c > emptySpaces) {
-                System.out.println("Error! Please enter another number.");
-            }
-        } while (c > emptySpaces);
-
-        int dotsPlace = 0;
-        while (c > dotsPlace) {
-            int i = random.nextInt(k);
-            int j = random.nextInt(k);
-
-            if (hollowSquare[i][j] == ' ') {
-                hollowSquare[i][j] = '.';
-                dotsPlace++;
-            }
-        }
-
 
         for (int i = 0; i < k + 2; i++) {
             for (int j = 0; j < k + 2; j++) {
@@ -144,4 +115,5 @@ public class Main_EX2_PM_2_1 {
 
     }
 }
-
+// I'm sorry,I had pushed this exercise without realizing it shouldn't include a dot.
+// I’ve now removed that part of the code and recommitted the changes.
