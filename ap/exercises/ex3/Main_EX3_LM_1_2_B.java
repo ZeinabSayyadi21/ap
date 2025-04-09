@@ -156,4 +156,5 @@ public class Main_EX3_LM_1_2_B {
             return firstName + "," + lastName + "," + id + "," + major;
         }
     }
+
 }
