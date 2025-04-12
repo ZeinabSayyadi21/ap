@@ -24,6 +24,7 @@ public class Main_EX2_PM_1_2 {
 
         }
 
+
         for (int i=0 ; i<k+2 ; i++) {
             for (int j=0 ; j<k+2 ; j++) {
                 System.out.print(hollowSquare[i][j] );
