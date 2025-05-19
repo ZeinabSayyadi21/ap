@@ -62,7 +62,10 @@ public class Menu {
             System.out.println("2.List of available books:");
             System.out.println("3.List of librarians:");
             System.out.println("4.List of students:");
-            System.out.println("5.Back to main menu");
+            System.out.println("5.List of late return books:");
+            System.out.println("6.List of loans:");
+            System.out.println("7.View Librarian Statistics:");
+            System.out.println("8.Back to main menu");
 
             int choice = input.readInt("Please choose your option:");
             switch (choice) {
@@ -78,7 +81,16 @@ public class Menu {
                 case 4 :
                     input.showAllStudents();
                     break;
-                case 5 : {
+                case 5 :
+                    input.showLateReturnBooks();
+                    break;
+                case 6 :
+                    input.showAllLoans();
+                    break;
+                case 7 :
+                    input.viewLibrarianStatistics();
+                    break;
+                case 8 : {
                     return;
                 }
                 default:
@@ -94,7 +106,10 @@ public class Menu {
                 System.out.println("2.Edit info");
                 System.out.println("3.List of available books:");
                 System.out.println("4.List of students:");
-                System.out.println("5.Back to main menu");
+                System.out.println("5.List of loans:");
+                System.out.println("6.Confirm loan book request:");
+                System.out.println("7.Confirm return book request:");
+                System.out.println("8.Back to main menu");
 
                 int choice = input.readInt("Please choose your option:");
                 switch (choice) {
@@ -111,6 +126,14 @@ public class Menu {
                         input.showAllStudents();
                         break;
                     case 5 :
+                        input.showAllLoans();
+                        break;
+                    case 6 :
+                        input.confirmBookRequest(librarian);
+                        break;
+                    case 7 :
+                        input.confirmReturnBookRequest(librarian);
+                    case 8 :
                         return;
 
                     default:
@@ -125,14 +148,26 @@ public class Menu {
             while (true) {
                 System.out.println("Student menu:");
                 System.out.println("1.Search book");
-                System.out.println("2.Back to main menu");
+                System.out.println("2.Borrowing a book");
+                System.out.println("3.List of books borrowed and not returned:");
+                System.out.println("4.Returning a book:");
+                System.out.println("5.Back to main menu");
 
                 int choice = input.readInt("Please choose your option:");
                 switch (choice) {
-                    case 1:
+                    case 1 :
                         input.searchBookByTitle();
                         break;
-                    case 2: {
+                    case 2 :
+                        input.requestForLoanBook(student);
+                        break;
+                    case 3 :
+                        input.unReturnBooks(student);
+                        break;
+                    case 4 :
+                        input.requestForReturnBooks(student);
+                        break;
+                    case 5 : {
                         return;
                     }
                     default:

@@ -5,6 +5,7 @@ import ap.exercises.ex3.Main_EX3_LM_1_2_B;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class SaveLibraryData {
@@ -19,12 +20,14 @@ public class SaveLibraryData {
         saveBooks();
         saveLibrarians();
         saveStudents();
+        saveLoans();
     }
 
     public void loadAllData() {
         loadBooks();
         loadLibrarians();
         loadStudents();
+       // loadLoans();
     }
 
     private void saveBooks() {
@@ -127,6 +130,58 @@ public class SaveLibraryData {
         }
     }
 
+    private void saveLoans() {
+        try (PrintWriter writer = new PrintWriter("Loans.txt");) {
+            for (Loan loan : library.getLoans()) {
+                writer.println(loan.getBook().getBookTitle() + "," +
+                        loan.getStudent().getFirstName() +" "+ loan.getStudent().getLastName() + "," +
+                        loan.getDeliveredDate() + "," +
+                        (loan.getDeliveredBy() != null ? loan.getDeliveredBy().getFirstName() +" "+
+                                loan.getDeliveredBy().getLastName(): "null") + "," +
+                        (loan.getReturnDate() != null ? loan.getReturnDate() : "null") + "," +
+                        (loan.getReceiveBy() != null ? loan.getReceiveBy().getFirstName() +" "+
+                                loan.getReceiveBy().getLastName(): "null" ));
+            }
+        } catch (IOException e) {
+            System.out.println("Error in saving loans!Please try again.");
+        }
+    }
+
+    private void loadLoans() {
+        File file = new File("Loans.txt");
+        if (!file.exists()) {
+            System.out.println("Loan not found!");
+            return;
+        }
+        try (Scanner scanner = new Scanner(file)){
+            while (scanner.hasNextLine()) {
+                String[] parts = scanner.nextLine().split("," ,6);
+                if (parts.length == 6) {
+                    String bookTitle = parts[0].trim();
+                    String studentFullName = parts[1].trim();
+                    LocalDate deliveredDate = LocalDate.parse(parts[2].trim());
+                    String deliveredByName = parts[3].trim();
+                    String returnDate = parts[4].trim();
+                    String receiveByName = parts[5].trim();
+
+                    Book book = library.findBookByTitle(bookTitle);
+                    Student student = library.findStudentByFullName(studentFullName);
+                    Librarian deliveredBy = deliveredByName.equals("null") ? null :
+                            library.findLibrarianByFullName(deliveredByName);
+                    LocalDate loanReturnDate = returnDate.equals("null") ? null :
+                            LocalDate.parse(returnDate);
+                    Librarian receiveBy = receiveByName.equals("null") ? null :
+                            library.findLibrarianByFullName(receiveByName);
+
+                    Loan loan = new Loan(book , student ,deliveredDate  , deliveredBy, loanReturnDate,receiveBy  );
+
+                    library.addLoans(loan);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error in loading loans!Please try again.");
+        }
+    }
 }
 
 
