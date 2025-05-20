@@ -32,5 +32,4 @@ public class Laptop {
     public String toString() {
         return "Laptop [Brand: " + brand + ", Color: " + color + ", Price: " + price + "]\n";
     }
-
 }

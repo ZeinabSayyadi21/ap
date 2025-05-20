@@ -36,4 +36,5 @@ public class Case {
     public String toString() {
         return "Case [Brand: " + brand + ", Price: " + price + ", Weight: " + weigh + "]";
     }
+
 }

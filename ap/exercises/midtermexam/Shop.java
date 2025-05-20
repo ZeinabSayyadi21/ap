@@ -48,7 +48,6 @@ public class Shop {
     }
 
     public void showCaseList() {
-
         if (cases.isEmpty()) {
             System.out.println("There is no case to show!");
         } else {
