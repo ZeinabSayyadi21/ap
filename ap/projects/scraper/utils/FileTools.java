@@ -1,6 +1,9 @@
 package ap.projects.scraper.utils;
 
 import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -16,5 +19,22 @@ public class FileTools {
 //            throw new RuntimeException(e);
             return null;
         }
+    }
+
+    public static void createParentDirectories(String filePath) {
+        File file = new File(filePath);
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists()) {
+            parent.mkdirs();
+        }
+    }
+
+    public static void writeToFile(String filePath, List<String> lines) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+        for (String line : lines) {
+            writer.write(line);
+            writer.newLine();
+        }
+        writer.close();
     }
 }
