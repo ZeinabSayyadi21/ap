@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class HtmlFetcher {
 
     public static List<String> fetchHtml(String urlAddress) throws IOException {
@@ -21,6 +22,7 @@ public class HtmlFetcher {
         System.out.println(urlAddress+" fetched.");
         return htmlLines;
     }
+
 
 }
 

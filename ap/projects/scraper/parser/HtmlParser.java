@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.ArrayList;
 
 public class HtmlParser {
 
@@ -56,6 +57,46 @@ public class HtmlParser {
             }
         }
         return url;
+    }
+
+    public static List<String> extractImageUrls(List<String> htmlLines) {
+        List<String> imageUrls = new ArrayList<>();
+        for (String line : htmlLines) {
+            int index = line.indexOf("<img");
+            while (index >= 0) {
+                int srcIndex = line.indexOf("src=\"", index);
+                if (srcIndex >= 0) {
+                    int start = srcIndex + 5;
+                    int end = line.indexOf("\"", start);
+                    if (end > start) {
+                        String url = line.substring(start, end);
+                        imageUrls.add(url);
+                    }
+                    index = line.indexOf("<img", end);
+                } else break;
+            }
+        }
+        return imageUrls;
+    }
+
+    public static List<String> extractAudioUrls(List<String> htmlLines) {
+        List<String> audioUrls = new ArrayList<>();
+        for (String line : htmlLines) {
+            int index = line.indexOf("<audio");
+            while (index >= 0) {
+                int srcIndex = line.indexOf("src=\"", index);
+                if (srcIndex >= 0) {
+                    int start = srcIndex + 5;
+                    int end = line.indexOf("\"", start);
+                    if (end > start) {
+                        String url = line.substring(start, end);
+                        audioUrls.add(url);
+                    }
+                    index = line.indexOf("<audio", end);
+                } else break;
+            }
+        }
+        return audioUrls;
     }
 
 

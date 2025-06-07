@@ -37,4 +37,12 @@ public class FileTools {
         }
         writer.close();
     }
+
+    public static String extractFilename(String url) {
+        try {
+            return url.substring(url.lastIndexOf("/") + 1).split("\\?")[0];
+        } catch (Exception e) {
+            return "unknown_file";
+        }
+    }
 }

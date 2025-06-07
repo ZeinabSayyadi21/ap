@@ -7,4 +7,5 @@ public class Conf {
 
     public static final String SAVE_DIRECTORY = "fetched_html";
 
+    public static final int DOWNLOAD_DELAY = 2;
 }

@@ -1,7 +1,9 @@
 package ap.projects.scraper.fetcher;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -57,6 +59,17 @@ public class ImageDownloader {
         } catch (IOException e) {
             System.err.println("Failed to download image: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public static void downloadBinaryFile(String fileUrl, String savePath) throws IOException {
+        URL url = new URL(fileUrl);
+        try (InputStream in = url.openStream(); OutputStream out = new FileOutputStream(savePath)) {
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = in.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
         }
     }
 }
