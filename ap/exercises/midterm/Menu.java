@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Menu {
 
-    private final Scanner scanner = new Scanner(System.in);
+   // private final Scanner scanner = new Scanner(System.in);
     private final InputProcessor input;
 
     public Menu(InputProcessor input) {
@@ -64,8 +64,9 @@ public class Menu {
             System.out.println("4.List of students:");
             System.out.println("5.List of late return books:");
             System.out.println("6.List of loans:");
-            System.out.println("7.View Librarian Statistics:");
-            System.out.println("8.Back to main menu");
+            System.out.println("7.Top 10 books:");
+            System.out.println("8.View Librarian Statistics:");
+            System.out.println("9.Back to main menu");
 
             int choice = input.readInt("Please choose your option:");
             switch (choice) {
@@ -88,9 +89,12 @@ public class Menu {
                     input.showAllLoans();
                     break;
                 case 7 :
+                    input.top10BooksLastYear();
+                    break;
+                case 8 :
                     input.viewLibrarianStatistics();
                     break;
-                case 8 : {
+                case 9 : {
                     return;
                 }
                 default:

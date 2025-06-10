@@ -26,6 +26,22 @@ public class Library {
         this.manager = manager;
     }
 
+    public void setLibrarians(ArrayList<Librarian> librarians) {
+        this.librarians = librarians;
+    }
+
+    public void setStudents(ArrayList<Student> students) {
+        this.students = students;
+    }
+
+    public void setBooks(ArrayList<Book> books) {
+        this.books = books;
+    }
+
+    public void setLoans(ArrayList<Loan> loans) {
+        this.loans = loans;
+    }
+
     public ArrayList<Book> getBooks() {
         return books;
     }
@@ -169,13 +185,5 @@ public class Library {
         return null;
     }
 }
-
-
-
-
-
-
-
-
 
 

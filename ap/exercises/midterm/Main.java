@@ -10,11 +10,11 @@ public class Main {
         library.addLibrarian(new Librarian("Sara" , "Karimi" , "1235"));
 
         SaveLibraryData libraryData = new SaveLibraryData(library);
-        libraryData.loadAllData();
+        libraryData.loadAll();
 
         InputProcessor input = new InputProcessor(library);
         Menu menu = new Menu(input);
         menu.mainMenu();
-        libraryData.saveAllData();
+        libraryData.saveAll();
     }
 }

@@ -111,13 +111,13 @@ public class Loan {
         return returnConfirmedBy != null;
     }
 
-    public boolean isOverdue() {
+  /*  public boolean isOverdue() {
         if (returnDate == null) {
             return LocalDate.now().isAfter(dueDate);     //The book has not been returned yet
         } else {
             return returnDate.isAfter(dueDate);
         }
-    }
+    }*/
 
     public long getDaysLate() {
         if (returnDate == null) {

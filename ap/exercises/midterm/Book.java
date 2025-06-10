@@ -42,7 +42,7 @@ public class Book {
         return "Book: " +bookTitle+ "," +author+ "," +pages+ "," +publicationYear;
     }
 
-    public boolean matchTitle(String query) {
+   /*public boolean matchTitle(String query) {
         return bookTitle.toLowerCase().contains(query.toLowerCase());
     }
 
@@ -60,7 +60,7 @@ public class Book {
         } else {
             System.out.println("This book wasn't borrowed!");
         }
-    }
+    }*/
 
 
 }
