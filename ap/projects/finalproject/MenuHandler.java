@@ -30,7 +30,7 @@ public class MenuHandler {
                     handleStudentRegistration();
                     break;
                 case 2:
-                 //   handleStudentLogin();
+                    handleStudentLogin();
                     break;
                 case 3:
                     displayStudentCount();
@@ -68,7 +68,7 @@ public class MenuHandler {
         librarySystem.registerStudent(name, studentId, username, password);
     }
 
-   /* private void handleStudentLogin() {
+     private void handleStudentLogin() {
         System.out.println("\n--- Student Login ---");
 
         System.out.print("Username: ");
@@ -85,7 +85,7 @@ public class MenuHandler {
         } else {
             System.out.println("Invalid username or password. Please try again.");
         }
-    }*/
+    }
 
     private void displayLoggedInStudentMenu() {
         while (currentUser != null) {

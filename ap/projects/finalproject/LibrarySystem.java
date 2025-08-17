@@ -18,9 +18,9 @@ public class LibrarySystem {
         studentManager.registerStudent(name, studentId, username, password);
     }
 
-  /*  public Student authenticateStudent(String username, String password) {
+    public Student authenticateStudent(String username, String password) {
         return studentManager.authenticateStudent(username, password);
-    }*/
+    }
 
     public void editStudentInformation(Student student) {
         System.out.println("Not implemented.");

@@ -9,6 +9,7 @@ public class StudentManager {
 
     public StudentManager() {
         this.students = new ArrayList<>();
+        students = FileManager.loadStudents();
     }
 
     public void registerStudent(String name, String studentId, String username, String password) {
@@ -25,14 +26,15 @@ public class StudentManager {
         Student newStudent = new Student(name, studentId, username, password);
         students.add(newStudent);
         System.out.println("Student registration completed successfully.");
+        FileManager.saveStudents(students);
     }
 
-   // public Student authenticateStudent(String username, String password) {
-    //    return students.stream()
-    //            .filter(s -> s.getUsername().equals(username) && s.getPassword().equals(password))
-     //           .findFirst()
-     //           .orElse(null);
-   // }
+   public Student authenticateStudent(String username, String password) {
+        return students.stream()
+                .filter(s -> s.getUsername().equals(username) && s.getPassword().equals(password))
+                .findFirst()
+                .orElse(null);
+    }
 
     public void displayStudents() {
         System.out.println("\n--- List of Registered Students ---");
