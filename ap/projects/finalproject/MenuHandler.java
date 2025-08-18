@@ -1,5 +1,6 @@
 package ap.projects.finalproject;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class MenuHandler {
@@ -7,11 +8,16 @@ public class MenuHandler {
     private Scanner scanner;
     private LibrarySystem librarySystem;
     private Student currentUser;
+    private BookManager bookManager;
 
-    public MenuHandler(LibrarySystem librarySystem) {
+    InputHandler input = new InputHandler();
+
+    public MenuHandler(LibrarySystem librarySystem , BookManager bookManager) {
         this.scanner = new Scanner(System.in);
         this.librarySystem = librarySystem;
         this.currentUser = null;
+        this.bookManager = bookManager;
+
     }
 
     public void displayMainMenu() {
@@ -92,13 +98,14 @@ public class MenuHandler {
             System.out.println("\n=== Student Dashboard ===");
             System.out.println("1. View My Information");
             System.out.println("2. Edit My Information");
-            System.out.println("3. Borrow a Book");
-            System.out.println("4. Return a Book");
-            System.out.println("5. View Available Books");
-            System.out.println("6. Logout");
+            System.out.println("3. Search book");
+            System.out.println("4. Borrow a Book");
+            System.out.println("5. Return a Book");
+            System.out.println("6. View Available Books");
+            System.out.println("7. Logout");
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 6);
+            int choice = getIntInput(1, 7);
 
             switch (choice) {
                 case 1:
@@ -109,15 +116,18 @@ public class MenuHandler {
                     librarySystem.editStudentInformation(currentUser);
                     break;
                 case 3:
-                    librarySystem.borrowBook(currentUser);
+                    searchingBook();
                     break;
                 case 4:
-                    librarySystem.returnBook(currentUser);
+                    librarySystem.borrowBook(currentUser);
                     break;
                 case 5:
-                    librarySystem.displayAvailableBooks();
+                    librarySystem.returnBook(currentUser);
                     break;
                 case 6:
+                    librarySystem.displayAvailableBooks();
+                    break;
+                case 7:
                     currentUser = null;
                     System.out.println("Logged out successfully.");
                     return;
@@ -137,6 +147,34 @@ public class MenuHandler {
                 System.out.printf("Please enter a number between %d and %d: ", min, max);
             } catch (NumberFormatException e) {
                 System.out.print("Invalid input. Please enter a number: ");
+            }
+        }
+    }
+
+    public void searchingBook() {
+        String bookTitle = input.getString("Please enter book title or skip it: ");
+        String author = input.getString("Please enter author or skip it: ");
+        String year = input.getString("Please enter year or skip it: ");
+
+        List<Book> result = bookManager.searchBooks (
+        bookTitle.isEmpty() ? null : bookTitle,
+                author.isEmpty() ? null : author,
+                year.isEmpty() ? null : year );
+        if (result.isEmpty()) {
+            System.out.println("No book found.");
+        } else {
+            System.out.println("\n=== Search Results ===");
+            System.out.println("Found " + result.size() + " book(s):");
+            System.out.println("-----------------------");
+
+            for (Book book : result) {
+                System.out.println(
+                        "Title: " + book.getBookTitle() +
+                                "\nAuthor: " + book.getAuthor() +
+                                "\nYear: " + book.getYear() +
+                                "\nAvailable: " + (book.isAvailable() ? "Yes" : "No") +
+                                "\n-----------------------"
+                );
             }
         }
     }

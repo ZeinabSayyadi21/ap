@@ -8,7 +8,6 @@ public class StudentManager {
     private List<Student> students;
 
     public StudentManager() {
-        this.students = new ArrayList<>();
         students = FileManager.loadStudents();
     }
 

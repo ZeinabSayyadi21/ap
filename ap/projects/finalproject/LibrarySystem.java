@@ -4,10 +4,12 @@ public class LibrarySystem {
 
     private StudentManager studentManager;
     private MenuHandler menuHandler;
+    private BookManager bookManager;
 
     public LibrarySystem() {
         this.studentManager = new StudentManager();
-        this.menuHandler = new MenuHandler(this);
+        this.bookManager = new BookManager();
+        this.menuHandler = new MenuHandler(this, this.bookManager);
     }
 
     public int getStudentCount() {
@@ -44,6 +46,12 @@ public class LibrarySystem {
 
     public static void main(String[] args) {
         LibrarySystem system = new LibrarySystem();
+
+
+        system.bookManager.addBook(new Book("Java programming", "Mr.Smith", "2020", true));
+        system.bookManager.addBook(new Book("Big Java", "Ali Ahmadi", "2012", true));
+        system.bookManager.addBook(new Book("python programming", "Ali Rad","2006", true ));
+
         system.start();
     }
 }
