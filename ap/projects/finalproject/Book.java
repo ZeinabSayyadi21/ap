@@ -37,8 +37,8 @@ public class Book {
     @Override
     public String toString() {
         return "Book title: " + bookTitle +
-                " | Author: " + author +
-                " | Year: " + year +
-                " | Inventory status: " + isAvailable;
+                " , Author: " + author +
+                " , Year: " + year +
+                " , Inventory status: " + isAvailable;
     }
 }

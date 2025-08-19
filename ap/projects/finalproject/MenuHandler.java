@@ -116,7 +116,7 @@ public class MenuHandler {
                     librarySystem.editStudentInformation(currentUser);
                     break;
                 case 3:
-                    searchingBook();
+                    librarySystem.searchingBook();
                     break;
                 case 4:
                     librarySystem.borrowBook(currentUser);
@@ -147,34 +147,6 @@ public class MenuHandler {
                 System.out.printf("Please enter a number between %d and %d: ", min, max);
             } catch (NumberFormatException e) {
                 System.out.print("Invalid input. Please enter a number: ");
-            }
-        }
-    }
-
-    public void searchingBook() {
-        String bookTitle = input.getString("Please enter book title or skip it: ");
-        String author = input.getString("Please enter author or skip it: ");
-        String year = input.getString("Please enter year or skip it: ");
-
-        List<Book> result = bookManager.searchBooks (
-        bookTitle.isEmpty() ? null : bookTitle,
-                author.isEmpty() ? null : author,
-                year.isEmpty() ? null : year );
-        if (result.isEmpty()) {
-            System.out.println("No book found.");
-        } else {
-            System.out.println("\n=== Search Results ===");
-            System.out.println("Found " + result.size() + " book(s):");
-            System.out.println("-----------------------");
-
-            for (Book book : result) {
-                System.out.println(
-                        "Title: " + book.getBookTitle() +
-                                "\nAuthor: " + book.getAuthor() +
-                                "\nYear: " + book.getYear() +
-                                "\nAvailable: " + (book.isAvailable() ? "Yes" : "No") +
-                                "\n-----------------------"
-                );
             }
         }
     }

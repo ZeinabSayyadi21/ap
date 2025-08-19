@@ -1,14 +1,20 @@
 package ap.projects.finalproject;
 
+import java.util.List;
+
 public class LibrarySystem {
 
     private StudentManager studentManager;
     private MenuHandler menuHandler;
     private BookManager bookManager;
+    private LoanManager loanManager;
+
+    InputHandler input = new InputHandler();
 
     public LibrarySystem() {
         this.studentManager = new StudentManager();
         this.bookManager = new BookManager();
+        this.loanManager = new LoanManager();
         this.menuHandler = new MenuHandler(this, this.bookManager);
     }
 
@@ -28,8 +34,67 @@ public class LibrarySystem {
         System.out.println("Not implemented.");
     }
 
+    public void searchingBook() {
+        String bookTitle = input.getString("Please enter book title or skip it: ");
+        String author = input.getString("Please enter author or skip it: ");
+        String year = input.getString("Please enter year or skip it: ");
+
+        List<Book> result = bookManager.searchBooks (
+                bookTitle.isEmpty() ? null : bookTitle,
+                author.isEmpty() ? null : author,
+                year.isEmpty() ? null : year );
+        if (result.isEmpty()) {
+            System.out.println("No book found.");
+        } else {
+            System.out.println("\n=== Search Results ===");
+            System.out.println("Found " + result.size() + " book(s):");
+            System.out.println("-----------------------");
+
+            for (Book book : result) {
+                System.out.println(
+                        "Title: " + book.getBookTitle() +
+                                "\nAuthor: " + book.getAuthor() +
+                                "\nYear: " + book.getYear() +
+                                "\nAvailable: " + (book.isAvailable() ? "Yes" : "No") +
+                                "\n-----------------------"
+                );
+            }
+        }
+    }
+
     public void borrowBook(Student student) {
-        System.out.println("Not implemented.");
+
+        String bookTitle = input.getString("Please enter book title or skip it: ");
+        String author = input.getString("Please enter author or skip it: ");
+        String year = input.getString("Please enter year or skip it: ");
+
+        List<Book> foundBooks = bookManager.searchBooks(bookTitle,author,year);
+
+        if (foundBooks.isEmpty()) {
+            System.out.println("Not found any books!");
+        } else {
+            System.out.println("\n=== Found Books ===");
+            for (int i = 0; i < foundBooks.size(); i++) {
+                Book book = foundBooks.get(i);
+                System.out.println((i + 1) + ". " + book.getBookTitle() + " by " + book.getAuthor() +
+                        " (" + book.getYear() + ") - Available: " + (book.isAvailable() ? "Yes" : "No"));
+            }
+            int choice = input.getInt("\nEnter the number of the book you want to borrow: ");
+            if (choice < 1 || choice > foundBooks.size()) {
+                System.out.println("Invalid selection!");
+                return;
+            }
+
+            Book borrowBook = foundBooks.get(choice - 1);
+
+            if (!borrowBook.isAvailable()) {
+                System.out.println("This book is not available for borrowing!");
+                return;
+            }
+            String startDate = input.getString("Please enter start date(like yyyy-mm-dd): ");
+            String endDate = input.getString("Please enter end date(like yyyy-mm-dd): ");
+            loanManager.studentRequestLoan(student,borrowBook,startDate,endDate);
+        }
     }
 
     public void returnBook(Student student) {

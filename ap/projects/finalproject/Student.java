@@ -33,7 +33,7 @@ public class Student {
     @Override
     public String toString() {
         return "Name: " + name +
-                " | Student ID: " + studentId +
-                " | Username: " + username;
+                " , Student ID: " + studentId +
+                " , Username: " + username;
     }
 }
