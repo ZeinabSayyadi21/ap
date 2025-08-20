@@ -25,11 +25,11 @@ public class MenuHandler {
             System.out.println("\n=== University Library Management System ===");
             System.out.println("1. Student Registration");
             System.out.println("2. Student Login");
-            System.out.println("3. View Registered Student Count");
+            System.out.println("3. Guest user login");
             System.out.println("4. Exit");
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 5);
+            int choice = getIntInput(1, 4);
 
             switch (choice) {
                 case 1:
@@ -39,7 +39,7 @@ public class MenuHandler {
                     handleStudentLogin();
                     break;
                 case 3:
-                    displayStudentCount();
+                    guestMenu();
                     break;
                 case 4:
                     System.out.println("Exiting system. Goodbye!");
@@ -48,6 +48,29 @@ public class MenuHandler {
                     System.out.println("Invalid option! Please try again.");
             }
             System.out.println("___________________________");
+        }
+    }
+
+    private void guestMenu() {
+        while (true) {
+            System.out.println("\n=== Guest Dashboard ===");
+            System.out.println("1. View Registered Student Count");
+            System.out.println("2. Logout");
+            System.out.print("Please enter your choice: ");
+
+            int choice = getIntInput(1 , 2);
+
+            switch (choice) {
+                case 1 :
+                    displayStudentCount();
+                    break;
+                case 2:
+                    System.out.println("Return to main menu");
+                    return;
+                default:
+                    System.out.println("Invalid option! Please try again.");
+
+            }
         }
     }
 
@@ -136,6 +159,7 @@ public class MenuHandler {
             }
         }
     }
+
 
     private int getIntInput(int min, int max) {
         while (true) {
