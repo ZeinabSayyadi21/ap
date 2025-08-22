@@ -55,21 +55,46 @@ public class MenuHandler {
         while (true) {
             System.out.println("\n=== Guest Dashboard ===");
             System.out.println("1. View Registered Student Count");
-            System.out.println("2. Logout");
+            System.out.println("2. Search book by title");
+            System.out.println("3. Logout");
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1 , 2);
+            int choice = getIntInput(1 , 3);
 
             switch (choice) {
                 case 1 :
                     displayStudentCount();
                     break;
-                case 2:
+                case 2 :
+                    searchBookForGuest();
+                    break;
+                case 3 :
                     System.out.println("Return to main menu");
                     return;
                 default:
                     System.out.println("Invalid option! Please try again.");
 
+            }
+        }
+    }
+
+    private void searchBookForGuest() {
+        String bookTitle = input.getString("Please enter book title: ");
+        List<Book> result = bookManager.searchBooksByTitle(bookTitle);
+
+        if (result.isEmpty()) {
+            System.out.println("No book found.");
+        } else {
+            System.out.println("\n=== Search Results ===");
+            System.out.println("Found " + result.size() + " book(s):");
+            System.out.println("-----------------------");
+
+            for (Book book : result) {
+                System.out.println(
+                        "Title: " + book.getBookTitle() +
+                                "\nAuthor: " + book.getAuthor() +
+                                "\nYear: " + book.getYear());
+                System.out.println("-------------------");
             }
         }
     }

@@ -26,6 +26,12 @@ public class BookManager {
                 .collect(Collectors.toList());
     }
 
+    public List<Book> searchBooksByTitle(String title) {
+        return books.stream()
+                .filter(book -> book.getBookTitle().contains(title))
+                .collect(Collectors.toList());
+    }
+
     public void printAllBooks() {
         for (Book book : books) {         //for test code
             System.out.println(book);
