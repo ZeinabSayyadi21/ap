@@ -8,15 +8,25 @@ public class LibrarySystem {
     private MenuHandler menuHandler;
     private BookManager bookManager;
     private LoanManager loanManager;
+    private StatisticsManager statisticsManager;
 
     InputHandler input = new InputHandler();
+
 
     public LibrarySystem() {
         this.studentManager = new StudentManager();
         this.bookManager = new BookManager();
         this.loanManager = new LoanManager();
         this.menuHandler = new MenuHandler(this, this.bookManager);
+        this.statisticsManager = new StatisticsManager(studentManager.getStudents(), bookManager.getBooks(),
+                loanManager.getLoans());
     }
+
+    public void showStatistics() {
+        statisticsManager.showStatistics();
+        loanManager.showLastLoans(5);
+    }
+
 
     public int getStudentCount() {
         return this.studentManager.getStudentCount();

@@ -2,6 +2,7 @@ package ap.projects.finalproject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LoanManager {
 
@@ -9,6 +10,10 @@ public class LoanManager {
 
     public LoanManager() {
         loans = new ArrayList<>();
+    }
+
+    public List<Loan> getLoans() {
+        return loans;
     }
 
     public void studentRequestLoan(Student student, Book book, String startDate, String endDate) {
@@ -20,6 +25,21 @@ public class LoanManager {
         loans.add(newLoan);
         book.setAvailable(false);
         System.out.println("Loan request registered successfully for book: " +book.getBookTitle());
+    }
+
+    public void showLastLoans(int k) {
+
+        if (loans.isEmpty()) {
+            System.out.println("There is no loans yet!");
+            return;
+        }
+
+        System.out.println("=== Last " + k + " loans ===");
+
+        loans.stream()
+                .skip(Math.max(0, loans.size() - k))
+                .collect(Collectors.toList())
+                .forEach(System.out::println);
     }
 
     public void printAllLoans() {

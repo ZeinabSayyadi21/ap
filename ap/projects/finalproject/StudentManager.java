@@ -11,6 +11,10 @@ public class StudentManager {
         students = FileManager.loadStudents();
     }
 
+    public List<Student> getStudents() {
+        return students;
+    }
+
     public void registerStudent(String name, String studentId, String username, String password) {
         if (isUsernameTaken(username)) {
             System.out.println("This username already exists. Please choose a different username.");

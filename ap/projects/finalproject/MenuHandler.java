@@ -56,10 +56,11 @@ public class MenuHandler {
             System.out.println("\n=== Guest Dashboard ===");
             System.out.println("1. View Registered Student Count");
             System.out.println("2. Search book by title");
-            System.out.println("3. Logout");
+            System.out.println("3. Show library statistics");
+            System.out.println("4. Logout");
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1 , 3);
+            int choice = getIntInput(1 , 4);
 
             switch (choice) {
                 case 1 :
@@ -69,6 +70,11 @@ public class MenuHandler {
                     searchBookForGuest();
                     break;
                 case 3 :
+                    System.out.println("How many recent loans do you want to see?");
+                    int k = getIntInput(1 , 100);
+                    librarySystem.showStatistics();
+                    break;
+                case 4 :
                     System.out.println("Return to main menu");
                     return;
                 default:
