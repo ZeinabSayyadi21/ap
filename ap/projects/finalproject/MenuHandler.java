@@ -25,23 +25,27 @@ public class MenuHandler {
             System.out.println("\n=== University Library Management System ===");
             System.out.println("1. Student Registration");
             System.out.println("2. Student Login");
-            System.out.println("3. Guest user login");
-            System.out.println("4. Exit");
+            System.out.println("3. Library Manager login");
+            System.out.println("4. Guest user login");
+            System.out.println("5. Exit");
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 4);
+            int choice = getIntInput(1, 5);
 
             switch (choice) {
-                case 1:
+                case 1 :
                     handleStudentRegistration();
                     break;
-                case 2:
+                case 2 :
                     handleStudentLogin();
                     break;
-                case 3:
+                case 3 :
+                    displayManagerMenu();
+                    break;
+                case 4 :
                     guestMenu();
                     break;
-                case 4:
+                case 5 :
                     System.out.println("Exiting system. Goodbye!");
                     return;
                 default:
@@ -184,6 +188,37 @@ public class MenuHandler {
                 case 7:
                     currentUser = null;
                     System.out.println("Logged out successfully.");
+                    return;
+                default:
+                    System.out.println("Invalid option! Please try again.");
+            }
+        }
+    }
+
+    private void displayManagerMenu() {
+        while (true) {
+            System.out.println("\n=== Manager Dashboard ===");
+            System.out.println("1. add Employee");
+            System.out.println("2. View Employees");
+            System.out.println("3. remove Employee");
+            System.out.println("4. Logout");
+
+            System.out.print("Please enter your choice: ");
+
+            int choice = getIntInput(1, 4);
+
+            switch (choice) {
+                case 1 :
+                    librarySystem.addEmployee();
+                    break;
+                case 2 :
+                    librarySystem.viewEmployees();
+                    break;
+                case 3 :
+                    librarySystem.removeEmployee();
+                    break;
+                case 4 :
+                    System.out.println("Return to main menu");
                     return;
                 default:
                     System.out.println("Invalid option! Please try again.");

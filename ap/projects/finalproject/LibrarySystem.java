@@ -9,6 +9,7 @@ public class LibrarySystem {
     private BookManager bookManager;
     private LoanManager loanManager;
     private StatisticsManager statisticsManager;
+    private EmployeeManager employeeManager;
 
     InputHandler input = new InputHandler();
 
@@ -20,6 +21,7 @@ public class LibrarySystem {
         this.menuHandler = new MenuHandler(this, this.bookManager);
         this.statisticsManager = new StatisticsManager(studentManager.getStudents(), bookManager.getBooks(),
                 loanManager.getLoans());
+        this.employeeManager = new EmployeeManager();
     }
 
     public void showStatistics() {
@@ -104,6 +106,30 @@ public class LibrarySystem {
             String startDate = input.getString("Please enter start date(like yyyy-mm-dd): ");
             String endDate = input.getString("Please enter end date(like yyyy-mm-dd): ");
             loanManager.studentRequestLoan(student,borrowBook,startDate,endDate);
+        }
+    }
+
+    public void addEmployee() {
+        String name = input.getString("Please enter name: ");
+        String employeeId = input.getString("Please enter employee id: ");
+        String username = input.getString("Please enter username: ");
+        String password = input.getString("Please enter password: ");
+
+        Employee employee = new Employee(name, employeeId, username, password);
+        employeeManager.addEmployee(employee);
+    }
+
+    public void removeEmployee() {
+        String username = input.getString("Please enter username of employee you want to remove: ");
+        employeeManager.removeEmployee(username);
+        System.out.println("Employee removed successfully!");
+    }
+
+    public void viewEmployees() {
+        System.out.println("\n=== Employees List ===");
+
+        for (Employee employee : employeeManager.getEmployees()) {
+            System.out.println(employee);
         }
     }
 
