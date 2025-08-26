@@ -26,11 +26,12 @@ public class MenuHandler {
             System.out.println("1. Student Registration");
             System.out.println("2. Student Login");
             System.out.println("3. Library Manager login");
-            System.out.println("4. Guest user login");
-            System.out.println("5. Exit");
+            System.out.println("4. Employee login");
+            System.out.println("5. Guest user login");
+            System.out.println("6. Exit");
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 5);
+            int choice = getIntInput(1, 6);
 
             switch (choice) {
                 case 1 :
@@ -43,9 +44,18 @@ public class MenuHandler {
                     displayManagerMenu();
                     break;
                 case 4 :
-                    guestMenu();
+                    Employee employee = librarySystem.employeeLogin();
+                    if (employee != null) {
+                        System.out.println("Welcome " +employee.getName());
+                        displayEmployeeMenu(employee);
+                    } else {
+                        System.out.println("Invalid username or password!");
+                    }
                     break;
                 case 5 :
+                    guestMenu();
+                    break;
+                case 6 :
                     System.out.println("Exiting system. Goodbye!");
                     return;
                 default:
@@ -218,6 +228,29 @@ public class MenuHandler {
                     librarySystem.removeEmployee();
                     break;
                 case 4 :
+                    System.out.println("Return to main menu");
+                    return;
+                default:
+                    System.out.println("Invalid option! Please try again.");
+            }
+        }
+    }
+
+    private void displayEmployeeMenu(Employee employee) {
+        while (true) {
+            System.out.println("\n=== Employee Dashboard ===");
+            System.out.println("1. View my information");
+            System.out.println("2. Logout");
+
+            System.out.print("Please enter your choice: ");
+
+            int choice = getIntInput(1, 2);
+
+            switch (choice) {
+                case 1 :
+                    System.out.println(employee.toString());
+                    break;
+                case 2 :
                     System.out.println("Return to main menu");
                     return;
                 default:

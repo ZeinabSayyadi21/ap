@@ -133,6 +133,14 @@ public class LibrarySystem {
         }
     }
 
+    public Employee employeeLogin() {
+        String username = input.getString("Please enter your username: ");
+        String password = input.getString("Please enter your password: ");
+
+       return employeeManager.login(username, password);
+
+    }
+
     public void returnBook(Student student) {
         System.out.println("Not implemented.");
     }
