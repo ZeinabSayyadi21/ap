@@ -1,6 +1,7 @@
 package ap.projects.finalproject;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LibrarySystem {
 
@@ -148,7 +149,22 @@ public class LibrarySystem {
     }
 
     public void displayAvailableBooks() {
-        System.out.println("Not implemented.");
+        System.out.println("\n=== Available books ===");
+        List<Book> availableBooks = bookManager.getBooks().stream()
+                .filter(Book::isAvailable)
+                .collect(Collectors.toList());
+        if (availableBooks.isEmpty()) {
+            System.out.println("There is no book yet!");
+        } else {
+            availableBooks.forEach(book -> {
+                System.out.println(
+                        "\nTitle: " + book.getBookTitle() +
+                                "\nAuthor: " + book.getAuthor() +
+                                "\nYear: " + book.getYear() +
+                                "\n----------------------"
+                );
+            });
+        }
     }
 
     public void start() {
@@ -158,10 +174,6 @@ public class LibrarySystem {
     public static void main(String[] args) {
         LibrarySystem system = new LibrarySystem();
 
-
-        system.bookManager.addBook(new Book("Java programming", "Mr.Smith", "2020", true));
-        system.bookManager.addBook(new Book("Big Java", "Ali Ahmadi", "2012", true));
-        system.bookManager.addBook(new Book("python programming", "Ali Rad","2006", true ));
 
         system.start();
     }

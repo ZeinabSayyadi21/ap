@@ -145,7 +145,7 @@ public class MenuHandler {
     }
 
      private void handleStudentLogin() {
-        System.out.println("\n--- Student Login ---");
+        System.out.println("\n=== Student Login ===");
 
         System.out.print("Username: ");
         String username = scanner.nextLine();
@@ -243,11 +243,12 @@ public class MenuHandler {
             System.out.println("\n=== Employee Dashboard ===");
             System.out.println("1. View my information");
             System.out.println("2. Change password");
-            System.out.println("3. Logout");
+            System.out.println("3. Add new book");
+            System.out.println("4. Logout");
 
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 3);
+            int choice = getIntInput(1, 4);
 
             switch (choice) {
                 case 1 :
@@ -260,6 +261,9 @@ public class MenuHandler {
                     employeeManager.changePassword(employee, oldPass, newPass);
                     break;
                 case 3 :
+                    bookRegistration();
+                    break;
+                case 4 :
                     System.out.println("Return to main menu");
                     return;
                 default:
@@ -268,6 +272,15 @@ public class MenuHandler {
         }
     }
 
+    private void bookRegistration() {
+        String bookTitle = input.getString("Please enter book title: ");
+        String author = input.getString("Please enter author: ");
+        String year = input.getString("Please enter year: ");
+
+        Book book = new Book(bookTitle, author, year, true);
+        bookManager.addBook(book);
+        System.out.println("Book added successfully!");
+    }
 
     private int getIntInput(int min, int max) {
         while (true) {

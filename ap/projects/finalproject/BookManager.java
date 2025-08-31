@@ -11,7 +11,7 @@ public class BookManager {
     public BookManager() {
 
         books = new ArrayList<>();
-       // books = FileManager.loadBooks();
+        books = FileManager.loadBooks();
     }
 
     public List<Book> getBooks() {
@@ -21,7 +21,7 @@ public class BookManager {
     public void addBook(Book book) {
 
         books.add(book);
-       // FileManager.saveBooks(books);
+        FileManager.saveBooks(books);
     }
 
     public List<Book> searchBooks(String bookTitle, String author, String year) {
