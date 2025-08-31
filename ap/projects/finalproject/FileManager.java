@@ -8,6 +8,8 @@ import java.util.Scanner;
 public class FileManager {
 
     private static final String STUDENT_FILE = "students.txt";
+    private static final String BOOK_FILE = "books.txt";
+    private static final String EMPLOYEE_FILE = "employees.txt";
 
     public static void saveStudents(List<Student> students) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(STUDENT_FILE))) {
@@ -33,5 +35,63 @@ public class FileManager {
             System.out.println("There is no students file!");
         }
         return students;
+    }
+
+    public static void saveEmployees(List<Employee> employees) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(EMPLOYEE_FILE))) {
+            for (Employee employee : employees) {
+                writer.println(employee.getName() +","+ employee.getEmployeeId() +","+ employee.getUsername()
+                        +","+ employee.getPassword());
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving employees: " +e.getMessage());
+        }
+    }
+
+    public static List<Employee> loadEmployees() {
+        List<Employee> employees = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new File(EMPLOYEE_FILE))) {
+            while (scanner.hasNextLine()) {
+                String[] parts = scanner.nextLine().split(",");
+                if (parts.length == 4) {
+                    employees.add(new Employee(parts[0], parts[1], parts[2], parts[3]));
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("There is no employees file!");
+        }
+        return employees;
+    }
+
+    public static void saveBooks(List<Book> books) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(BOOK_FILE))) {
+            for (Book book : books) {
+                writer.println(book.getBookTitle() +","+ book.getAuthor() +","+ book.getYear()
+                        +","+ book.isAvailable());
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving books: " +e.getMessage());
+        }
+    }
+
+    public static List<Book> loadBooks() {
+        List<Book> books = new ArrayList<>();
+
+        try (Scanner scanner = new Scanner(new File(BOOK_FILE))) {
+            while (scanner.hasNextLine()) {
+                String[] parts = scanner.nextLine().split(",");
+                if (parts.length == 4) {
+                    String bookTitle = parts[0];
+                    String author = parts[1];
+                    String year = parts[2];
+                    boolean available = Boolean.parseBoolean(parts[3]);
+
+                    books.add(new Book(bookTitle, author, year, available));
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("There is no students file!");
+        }
+        return books;
     }
 }

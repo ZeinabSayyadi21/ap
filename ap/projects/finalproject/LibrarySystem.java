@@ -18,10 +18,12 @@ public class LibrarySystem {
         this.studentManager = new StudentManager();
         this.bookManager = new BookManager();
         this.loanManager = new LoanManager();
-        this.menuHandler = new MenuHandler(this, this.bookManager);
+        this.employeeManager = new EmployeeManager();
+        this.menuHandler = new MenuHandler(this, this.bookManager, this.employeeManager);
         this.statisticsManager = new StatisticsManager(studentManager.getStudents(), bookManager.getBooks(),
                 loanManager.getLoans());
-        this.employeeManager = new EmployeeManager();
+
+
     }
 
     public void showStatistics() {

@@ -8,7 +8,7 @@ public class EmployeeManager {
     private List<Employee> employees;
 
     public EmployeeManager() {
-        this.employees = new ArrayList<>();
+       employees = FileManager.loadEmployees();
     }
 
     public List<Employee> getEmployees() {
@@ -35,8 +35,20 @@ public class EmployeeManager {
     }
 
 
+    public void changePassword(Employee employee, String oldPass, String newPass) {
+        if (! employee.getPassword().equals(oldPass)) {
+            System.out.println("Your password is invalid! Try again.");
+            return;
+        }
+        employee.setPassword(newPass);
+        FileManager.saveEmployees(employees);
+        System.out.println("Password changed successfully!");
+    }
+
+
     public void addEmployee(Employee employee) {
         employees.add(employee);
+        FileManager.saveEmployees(employees);
         System.out.println("Employee added successfully: " +employee.getName());
     }
 

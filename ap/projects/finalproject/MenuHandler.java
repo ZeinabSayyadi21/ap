@@ -9,14 +9,16 @@ public class MenuHandler {
     private LibrarySystem librarySystem;
     private Student currentUser;
     private BookManager bookManager;
+    private EmployeeManager employeeManager;
 
     InputHandler input = new InputHandler();
 
-    public MenuHandler(LibrarySystem librarySystem , BookManager bookManager) {
+    public MenuHandler(LibrarySystem librarySystem , BookManager bookManager , EmployeeManager employeeManager) {
         this.scanner = new Scanner(System.in);
         this.librarySystem = librarySystem;
         this.currentUser = null;
         this.bookManager = bookManager;
+        this.employeeManager = employeeManager;
 
     }
 
@@ -240,17 +242,24 @@ public class MenuHandler {
         while (true) {
             System.out.println("\n=== Employee Dashboard ===");
             System.out.println("1. View my information");
-            System.out.println("2. Logout");
+            System.out.println("2. Change password");
+            System.out.println("3. Logout");
 
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 2);
+            int choice = getIntInput(1, 3);
 
             switch (choice) {
                 case 1 :
                     System.out.println(employee.toString());
                     break;
                 case 2 :
+                    String oldPass = input.getString("Please enter your current password: ");
+                    String newPass = input.getString("Please enter your new password: ");
+
+                    employeeManager.changePassword(employee, oldPass, newPass);
+                    break;
+                case 3 :
                     System.out.println("Return to main menu");
                     return;
                 default:
