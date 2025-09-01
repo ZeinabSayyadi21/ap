@@ -2,6 +2,7 @@ package ap.projects.finalproject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class BookManager {
@@ -36,8 +37,31 @@ public class BookManager {
 
     public List<Book> searchBooksByTitle(String title) {
         return books.stream()
-                .filter(book -> book.getBookTitle().contains(title))
+                .filter(book -> book.getBookTitle().toLowerCase().contains(title.toLowerCase()))
                 .collect(Collectors.toList());
+    }
+
+    public void editBook(Book book) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Editing book: " +book.getBookTitle());
+
+        System.out.println("Please enter new title or skip it: ");
+        String newBookTitle = scanner.nextLine();
+        if (!newBookTitle.trim().isEmpty())
+            book.setBookTitle(newBookTitle);
+
+        System.out.println("Please enter new author or skip it: ");
+        String newAuthor = scanner.nextLine();
+        if (!newAuthor.trim().isEmpty())
+            book.setAuthor(newAuthor);
+
+        System.out.println("Please enter new year or skip it: ");
+        String newYear = scanner.nextLine();
+        if (!newYear.trim().isEmpty())
+            book.setYear(newYear);
+
+        System.out.println("Book information updated successfully!");
+        FileManager.saveBooks(books);
     }
 
     public void printAllBooks() {

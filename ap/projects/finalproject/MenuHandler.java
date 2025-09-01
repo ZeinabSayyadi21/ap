@@ -113,7 +113,8 @@ public class MenuHandler {
 
             for (Book book : result) {
                 System.out.println(
-                        "Title: " + book.getBookTitle() +
+                        "Book id: " + book.getBookId() +
+                        "\nBook title: " + book.getBookTitle() +
                                 "\nAuthor: " + book.getAuthor() +
                                 "\nYear: " + book.getYear());
                 System.out.println("-------------------");
@@ -244,11 +245,12 @@ public class MenuHandler {
             System.out.println("1. View my information");
             System.out.println("2. Change password");
             System.out.println("3. Add new book");
-            System.out.println("4. Logout");
+            System.out.println("4. Search and edit books");
+            System.out.println("5. Logout");
 
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 4);
+            int choice = getIntInput(1, 5);
 
             switch (choice) {
                 case 1 :
@@ -264,6 +266,9 @@ public class MenuHandler {
                     bookRegistration();
                     break;
                 case 4 :
+                    librarySystem.editBookInformation();
+                    break;
+                case 5 :
                     System.out.println("Return to main menu");
                     return;
                 default:

@@ -66,7 +66,7 @@ public class FileManager {
     public static void saveBooks(List<Book> books) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(BOOK_FILE))) {
             for (Book book : books) {
-                writer.println(book.getBookTitle() +","+ book.getAuthor() +","+ book.getYear()
+                writer.println(book.getBookId() +","+book.getBookTitle() +","+ book.getAuthor() +","+ book.getYear()
                         +","+ book.isAvailable());
             }
         } catch (IOException e) {
@@ -76,19 +76,28 @@ public class FileManager {
 
     public static List<Book> loadBooks() {
         List<Book> books = new ArrayList<>();
+        int maxId = 0;
 
         try (Scanner scanner = new Scanner(new File(BOOK_FILE))) {
             while (scanner.hasNextLine()) {
                 String[] parts = scanner.nextLine().split(",");
-                if (parts.length == 4) {
-                    String bookTitle = parts[0];
-                    String author = parts[1];
-                    String year = parts[2];
-                    boolean available = Boolean.parseBoolean(parts[3]);
+                if (parts.length == 5) {
+                    int bookId = Integer.parseInt(parts[0]);
+                    String bookTitle = parts[1];
+                    String author = parts[2];
+                    String year = parts[3];
+                    boolean available = Boolean.parseBoolean(parts[4]);
 
-                    books.add(new Book(bookTitle, author, year, available));
+                    Book book = new Book(bookTitle, author, year, available);
+                    book.setBookId(bookId);
+                    books.add(book);
+
+                    if (bookId > maxId)
+                        maxId = bookId;
                 }
             }
+            Book.setCounter(maxId + 1);
+
         } catch (FileNotFoundException e) {
             System.out.println("There is no students file!");
         }

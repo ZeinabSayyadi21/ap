@@ -49,7 +49,7 @@ public class LibrarySystem {
         System.out.println("Not implemented.");
     }
 
-    public void searchingBook() {
+    public List<Book> searchingBook() {
         String bookTitle = input.getString("Please enter book title or skip it: ");
         String author = input.getString("Please enter author or skip it: ");
         String year = input.getString("Please enter year or skip it: ");
@@ -67,13 +67,33 @@ public class LibrarySystem {
 
             for (Book book : result) {
                 System.out.println(
-                        "Title: " + book.getBookTitle() +
+                        "Book id: " + book.getBookId() +
+                        "\nBook title: " + book.getBookTitle() +
                                 "\nAuthor: " + book.getAuthor() +
                                 "\nYear: " + book.getYear() +
                                 "\nAvailable: " + (book.isAvailable() ? "Yes" : "No") +
                                 "\n-----------------------"
                 );
             }
+        }
+        return result;
+    }
+
+    public void editBookInformation() {
+        List<Book> result = searchingBook();
+
+        if (result.isEmpty()) {
+            return;
+        }
+
+
+        int id = input.getInt("Please enter the id of book that you want to edit: ");
+        Book book = bookManager.getBooks().stream()
+                .filter(book1 -> book1.getBookId() == id)
+                .findFirst()
+                .orElse(null);
+        if (book != null) {
+            bookManager.editBook(book);
         }
     }
 
@@ -158,7 +178,8 @@ public class LibrarySystem {
         } else {
             availableBooks.forEach(book -> {
                 System.out.println(
-                        "\nTitle: " + book.getBookTitle() +
+                        "\nBook id: " + book.getBookId() +
+                        "\nBook title: " + book.getBookTitle() +
                                 "\nAuthor: " + book.getAuthor() +
                                 "\nYear: " + book.getYear() +
                                 "\n----------------------"
