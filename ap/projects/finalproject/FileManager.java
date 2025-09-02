@@ -15,7 +15,7 @@ public class FileManager {
         try (PrintWriter writer = new PrintWriter(new FileWriter(STUDENT_FILE))) {
             for (Student student : students) {
                 writer.println(student.getName() +","+ student.getStudentId() +","+ student.getUsername()
-                +","+ student.getPassword());
+                +","+ student.getPassword() +","+ student.isActive());
             }
         } catch (IOException e) {
             System.out.println("Error saving students: " +e.getMessage());
@@ -24,11 +24,32 @@ public class FileManager {
 
     public static List<Student> loadStudents() {
         List<Student> students = new ArrayList<>();
-        try (Scanner scanner = new Scanner(new File(STUDENT_FILE))) {
+        File file = new File(STUDENT_FILE);
+
+        if (!file.exists()) {
+            return students;
+        }
+
+        try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
-                String[] parts = scanner.nextLine().split(",");
-                if (parts.length == 4) {
-                    students.add(new Student(parts[0], parts[1], parts[2], parts[3]));
+                String line = scanner.nextLine();
+                String[] parts = line.split(",");
+
+                if (parts.length >= 4) {
+                    String name = parts[0];
+                    String studentId = parts[1];
+                    String username = parts[2];
+                    String password = parts[3];
+
+                    boolean active = true;
+
+                    if (parts.length >= 5) {
+                        active = Boolean.parseBoolean(parts[4]);
+                    }
+
+                    Student student = new Student(name, studentId, username, password);
+                    student.setActive(active);
+                    students.add(student);
                 }
             }
         } catch (FileNotFoundException e) {

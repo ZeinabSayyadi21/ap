@@ -6,6 +6,7 @@ public class Student {
     private String studentId;
     private String username;
     private String password;
+    private boolean active = true;
 
     public Student(String name, String studentId, String username, String password) {
         this.name = name;
@@ -30,10 +31,19 @@ public class Student {
         return password;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public String toString() {
         return "Name: " + name +
                 " , Student ID: " + studentId +
-                " , Username: " + username;
+                " , Username: " + username +
+                " , Status: " + (active ? "Active" : "Inactive");
     }
 }

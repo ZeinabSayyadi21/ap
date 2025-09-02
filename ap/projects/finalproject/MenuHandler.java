@@ -10,6 +10,7 @@ public class MenuHandler {
     private Student currentUser;
     private BookManager bookManager;
     private EmployeeManager employeeManager;
+    private StudentManager studentManager;
 
     InputHandler input = new InputHandler();
 
@@ -19,6 +20,7 @@ public class MenuHandler {
         this.currentUser = null;
         this.bookManager = bookManager;
         this.employeeManager = employeeManager;
+        this.studentManager = new StudentManager();
 
     }
 
@@ -246,11 +248,12 @@ public class MenuHandler {
             System.out.println("2. Change password");
             System.out.println("3. Add new book");
             System.out.println("4. Search and edit books");
-            System.out.println("5. Logout");
+            System.out.println("5. Active or Inactive student");
+            System.out.println("6. Logout");
 
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 5);
+            int choice = getIntInput(1, 6);
 
             switch (choice) {
                 case 1 :
@@ -269,6 +272,10 @@ public class MenuHandler {
                     librarySystem.editBookInformation();
                     break;
                 case 5 :
+                    String studentId = input.getString("Please enter the student id: ");
+                    studentManager.toggleStudentStatus(studentId);
+                    break;
+                case 6 :
                     System.out.println("Return to main menu");
                     return;
                 default:

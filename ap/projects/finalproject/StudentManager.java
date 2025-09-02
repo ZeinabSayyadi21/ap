@@ -39,6 +39,22 @@ public class StudentManager {
                 .orElse(null);
     }
 
+    public void toggleStudentStatus(String studentId) {
+        Student student = students.stream()
+                .filter(student1 -> student1.getStudentId().equals(studentId))
+                .findFirst()
+                .orElse(null);
+
+        if (student != null) {
+            student.setActive(!student.isActive());
+            System.out.println("Student: " +student.getName()+ " is " +  (student.isActive() ? " Active " : " Inactive "));
+
+            FileManager.saveStudents(students);
+        } else {
+            System.out.println("Student not found!");
+        }
+    }
+
     public void displayStudents() {
         System.out.println("\n--- List of Registered Students ---");
 
