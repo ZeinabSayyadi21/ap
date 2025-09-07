@@ -10,6 +10,7 @@ public class FileManager {
     private static final String STUDENT_FILE = "students.txt";
     private static final String BOOK_FILE = "books.txt";
     private static final String EMPLOYEE_FILE = "employees.txt";
+    private static final String LOAN_FILE = "loan.txt";
 
     public static void saveStudents(List<Student> students) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(STUDENT_FILE))) {
@@ -123,5 +124,60 @@ public class FileManager {
             System.out.println("There is no students file!");
         }
         return books;
+    }
+
+    public static void saveLoans(List<Loan> loans) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(LOAN_FILE))) {
+            for (Loan loan : loans) {
+                writer.println(loan.getLoanId() +","+loan.getStudent().getStudentId() +","+
+                        loan.getBook().getBookId() +","+ loan.getStartDate()
+                        +","+loan.getEndDate() +","+loan.isReturned() +","+loan.isApproved());
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving loans: " +e.getMessage());
+        }
+    }
+
+    private static List<Loan> loadLoans(List<Student> students, List<Book> books) {
+        List<Loan> loans = new ArrayList<>();
+        File file = new File(LOAN_FILE);
+
+        if (!file.exists())
+            return loans;
+
+        try (Scanner scanner = new Scanner(file)){
+            while (scanner.hasNextLine()) {
+                String[] parts = scanner.nextLine().split(",");
+                if (parts.length == 7) {
+                    int loanId = Integer.parseInt(parts[0]);
+                    String studentId = parts[1];
+                    int bookId = Integer.parseInt(parts[2]);
+                    String startDate = parts[3];
+                    String endDate = parts[4];
+                    boolean returned = Boolean.parseBoolean(parts[5]);
+                    boolean approved = Boolean.parseBoolean(parts[6]);
+
+                    Student student = students.stream()
+                            .filter( student1 -> student1.getStudentId().equals(studentId))
+                            .findFirst()
+                            .orElse(null);
+
+                   Book book = books.stream()
+                            .filter( book1 -> book1.getBookId() == bookId)
+                            .findFirst()
+                            .orElse(null);
+
+                   if (student != null && book != null) {
+                       Loan loan = new Loan(loanId, student, book, startDate, endDate);
+                       loan.setReturned(returned);
+                       loan.setApproved(approved);
+                       loans.add(loan);
+                   }
+                }
+            }
+        } catch (IOException e ) {
+            System.out.println("Error loading loans: " + e.getMessage());
+        }
+        return loans;
     }
 }

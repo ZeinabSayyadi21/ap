@@ -249,11 +249,12 @@ public class MenuHandler {
             System.out.println("3. Add new book");
             System.out.println("4. Search and edit books");
             System.out.println("5. Active or Inactive student");
-            System.out.println("6. Logout");
+            System.out.println("6. Approve loan requests");
+            System.out.println("7. Logout");
 
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 6);
+            int choice = getIntInput(1, 7);
 
             switch (choice) {
                 case 1 :
@@ -276,6 +277,9 @@ public class MenuHandler {
                     studentManager.toggleStudentStatus(studentId);
                     break;
                 case 6 :
+                    librarySystem.approveLoans();
+                    break;
+                case 7 :
                     System.out.println("Return to main menu");
                     return;
                 default:

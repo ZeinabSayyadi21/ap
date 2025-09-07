@@ -1,5 +1,6 @@
 package ap.projects.finalproject;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,37 +99,81 @@ public class LibrarySystem {
     }
 
     public void borrowBook(Student student) {
+        if (!student.isActive()) {
+            System.out.println("You are not allowed to borrow books. Your account is inactive.");
+            return;
+        }
 
-        String bookTitle = input.getString("Please enter book title or skip it: ");
-        String author = input.getString("Please enter author or skip it: ");
-        String year = input.getString("Please enter year or skip it: ");
+        String bookTitle = input.getString("Enter book title to search: ");
+        List<Book> results = bookManager.searchBooks(bookTitle, null, null);
 
-        List<Book> foundBooks = bookManager.searchBooks(bookTitle,author,year);
+        if (results.isEmpty()) {
+            System.out.println("No books found with this title.");
+            return;
+        }
 
-        if (foundBooks.isEmpty()) {
-            System.out.println("Not found any books!");
+        System.out.println("\n=== Founded Books ===");
+        for (int i = 0; i < results.size(); i++) {
+            Book book = results.get(i);
+            System.out.println((i + 1) + ". " + book.getBookTitle() +
+                    " by " + book.getAuthor() +
+                    " (" + book.getYear() + ")" +
+                    " | Available: " + (book.isAvailable() ? "Yes" : "No"));
+        }
+
+        int choice = input.getInt("Select the number of the book you want to borrow (0 to cancel): ");
+        if (choice == 0 || choice > results.size()) {
+            System.out.println("Borrow request canceled.");
+            return;
+        }
+
+        Book selectedBook = results.get(choice - 1);
+
+        if (!selectedBook.isAvailable()) {
+            System.out.println("Sorry, this book is not available.");
+            return;
+        }
+
+        int days = input.getInt("Enter borrowing duration in days: ");
+        String startDate = LocalDate.now().toString();
+        String endDate = LocalDate.now().plusDays(days).toString();
+
+        Loan newLoan = new Loan(student, selectedBook, startDate, endDate);
+        loanManager.addLoan(newLoan);
+
+        selectedBook.setAvailable(false);
+        FileManager.saveBooks(bookManager.getBooks());
+
+        System.out.println("Your borrow request has been registered successfully.");
+    }
+
+    public void approveLoans() {
+        System.out.println("=== Pending Loan Requests ===");
+
+        List<Loan> loans = loanManager.getLoans();
+        loans.stream()
+                .filter(l -> !l.isApproved()
+                        && (l.getStartDateAsDate().isEqual(LocalDate.now())
+                        || l.getStartDateAsDate().isEqual(LocalDate.now().minusDays(1))))
+                .forEach(System.out::println);
+
+        int loanId = input.getInt("Enter Loan ID to approve (0 to cancel): ");
+        if (loanId == 0) return;
+
+        Loan loan = loans.stream()
+                .filter(l -> l.getLoanId() == loanId)
+                .findFirst()
+                .orElse(null);
+
+        if (loan != null) {
+            loan.setApproved(true);
+            loan.getBook().setAvailable(false);
+            FileManager.saveLoans(loans);
+            FileManager.saveBooks(bookManager.getBooks());
+
+            System.out.println("Loan approved successfully!");
         } else {
-            System.out.println("\n=== Found Books ===");
-            for (int i = 0; i < foundBooks.size(); i++) {
-                Book book = foundBooks.get(i);
-                System.out.println((i + 1) + ". " + book.getBookTitle() + " by " + book.getAuthor() +
-                        " (" + book.getYear() + ") - Available: " + (book.isAvailable() ? "Yes" : "No"));
-            }
-            int choice = input.getInt("\nEnter the number of the book you want to borrow: ");
-            if (choice < 1 || choice > foundBooks.size()) {
-                System.out.println("Invalid selection!");
-                return;
-            }
-
-            Book borrowBook = foundBooks.get(choice - 1);
-
-            if (!borrowBook.isAvailable()) {
-                System.out.println("This book is not available for borrowing!");
-                return;
-            }
-            String startDate = input.getString("Please enter start date(like yyyy-mm-dd): ");
-            String endDate = input.getString("Please enter end date(like yyyy-mm-dd): ");
-            loanManager.studentRequestLoan(student,borrowBook,startDate,endDate);
+            System.out.println("Loan not found.");
         }
     }
 

@@ -16,6 +16,10 @@ public class LoanManager {
         return loans;
     }
 
+    public void addLoan(Loan loan) {
+        loans.add(loan);
+    }
+
     public void studentRequestLoan(Student student, Book book, String startDate, String endDate) {
         if (!book.isAvailable()) {
             System.out.println("This book is already on loan. Please check back later.");
