@@ -7,9 +7,13 @@ import java.util.stream.Collectors;
 public class LoanManager {
 
     private List<Loan> loans;
+    private StudentManager studentManager;
+    private BookManager bookManager;
 
-    public LoanManager() {
-        loans = new ArrayList<>();
+    public LoanManager(StudentManager studentManager, BookManager bookManager) {
+        this.studentManager = studentManager;
+        this.bookManager = bookManager;
+        this.loans = FileManager.loadLoans(studentManager.getStudents(), bookManager.getBooks());
     }
 
     public List<Loan> getLoans() {
@@ -18,6 +22,7 @@ public class LoanManager {
 
     public void addLoan(Loan loan) {
         loans.add(loan);
+        FileManager.saveLoans(loans);
     }
 
     public void studentRequestLoan(Student student, Book book, String startDate, String endDate) {

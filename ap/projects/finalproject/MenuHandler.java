@@ -173,12 +173,13 @@ public class MenuHandler {
             System.out.println("2. Edit My Information");
             System.out.println("3. Search book");
             System.out.println("4. Borrow a Book");
-            System.out.println("5. Return a Book");
-            System.out.println("6. View Available Books");
-            System.out.println("7. Logout");
+            System.out.println("5. Receive Loan By Student");
+            System.out.println("6. Return a Book");
+            System.out.println("7. View Available Books");
+            System.out.println("8. Logout");
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 7);
+            int choice = getIntInput(1, 8);
 
             switch (choice) {
                 case 1:
@@ -194,13 +195,16 @@ public class MenuHandler {
                 case 4:
                     librarySystem.borrowBook(currentUser);
                     break;
-                case 5:
+                case 5 :
+                    librarySystem.receiveLoanByStudent(currentUser);
+                    break;
+                case 6 :
                     librarySystem.returnBook(currentUser);
                     break;
-                case 6:
+                case 7 :
                     librarySystem.displayAvailableBooks();
                     break;
-                case 7:
+                case 8 :
                     currentUser = null;
                     System.out.println("Logged out successfully.");
                     return;

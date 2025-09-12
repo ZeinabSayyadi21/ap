@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 public class LibrarySystem {
 
     private StudentManager studentManager;
@@ -19,7 +20,7 @@ public class LibrarySystem {
     public LibrarySystem() {
         this.studentManager = new StudentManager();
         this.bookManager = new BookManager();
-        this.loanManager = new LoanManager();
+        this.loanManager = new LoanManager(studentManager, bookManager);
         this.employeeManager = new EmployeeManager();
         this.menuHandler = new MenuHandler(this, this.bookManager, this.employeeManager);
         this.statisticsManager = new StatisticsManager(studentManager.getStudents(), bookManager.getBooks(),
@@ -55,10 +56,10 @@ public class LibrarySystem {
         String author = input.getString("Please enter author or skip it: ");
         String year = input.getString("Please enter year or skip it: ");
 
-        List<Book> result = bookManager.searchBooks (
+        List<Book> result = bookManager.searchBooks(
                 bookTitle.isEmpty() ? null : bookTitle,
                 author.isEmpty() ? null : author,
-                year.isEmpty() ? null : year );
+                year.isEmpty() ? null : year);
         if (result.isEmpty()) {
             System.out.println("No book found.");
         } else {
@@ -69,7 +70,7 @@ public class LibrarySystem {
             for (Book book : result) {
                 System.out.println(
                         "Book id: " + book.getBookId() +
-                        "\nBook title: " + book.getBookTitle() +
+                                "\nBook title: " + book.getBookTitle() +
                                 "\nAuthor: " + book.getAuthor() +
                                 "\nYear: " + book.getYear() +
                                 "\nAvailable: " + (book.isAvailable() ? "Yes" : "No") +
@@ -177,6 +178,41 @@ public class LibrarySystem {
         }
     }
 
+    public void receiveLoanByStudent(Student student) {
+        System.out.println("\n=== Your Approved Loans ===");
+
+        List<Loan> loans = loanManager.getLoans();
+        List<Loan> pendingPickups = loans.stream()
+                .filter(l -> l.getStudent().getStudentId() == student.getStudentId())
+                .filter(Loan::isApproved)
+                .filter(l -> !l.isReceived())
+                .collect(Collectors.toList());
+
+        if (pendingPickups.isEmpty()) {
+            System.out.println("You have no approved loans to pick up.");
+            return;
+        }
+
+
+        pendingPickups.forEach(System.out::println);
+
+        int loanId = input.getInt("Enter Loan ID to receive (0 to cancel): ");
+        if (loanId == 0) return;
+
+        Loan loan = pendingPickups.stream()
+                .filter(l -> l.getLoanId() == loanId)
+                .findFirst()
+                .orElse(null);
+
+        if (loan != null) {
+            loan.setReceived(true);
+            FileManager.saveLoans(loans);
+            System.out.println("You have successfully received the book: " + loan.getBook().getBookTitle());
+        } else {
+            System.out.println("Invalid Loan ID!");
+        }
+    }
+
     public void addEmployee() {
         String name = input.getString("Please enter name: ");
         String employeeId = input.getString("Please enter employee id: ");
@@ -205,13 +241,51 @@ public class LibrarySystem {
         String username = input.getString("Please enter your username: ");
         String password = input.getString("Please enter your password: ");
 
-       return employeeManager.login(username, password);
+        return employeeManager.login(username, password);
 
     }
 
     public void returnBook(Student student) {
-        System.out.println("Not implemented.");
+        System.out.println("\n=== Your Active Loans ===");
+
+        List<Loan> loans = loanManager.getLoans();
+        List<Loan> activeLoans = loans.stream()
+                .filter(l -> l.getStudent().getStudentId() == student.getStudentId())
+                .filter(Loan::isReceived)
+                .filter(l -> !l.isReturned())
+                .collect(Collectors.toList());
+
+        if (activeLoans.isEmpty()) {
+            System.out.println("You have no active loans to return.");
+            return;
+        }
+
+        activeLoans.forEach(System.out::println);
+
+        int loanId = input.getInt("Enter Loan ID to return (0 to cancel): ");
+        if (loanId == 0) return;
+
+        Loan loan = activeLoans.stream()
+                .filter(l -> l.getLoanId() == loanId)
+                .findFirst()
+                .orElse(null);
+
+        if (loan != null) {
+            loan.setReturned(true);
+            loan.setReturnDate(LocalDate.now().toString());
+            loan.getBook().setAvailable(true);
+
+            FileManager.saveLoans(loans);
+            FileManager.saveBooks(bookManager.getBooks());
+
+            System.out.println("Book returned successfully: " + loan.getBook().getBookTitle());
+        } else {
+            System.out.println("Invalid Loan ID!");
+        }
     }
+
+
+
 
     public void displayAvailableBooks() {
         System.out.println("\n=== Available books ===");
@@ -224,7 +298,7 @@ public class LibrarySystem {
             availableBooks.forEach(book -> {
                 System.out.println(
                         "\nBook id: " + book.getBookId() +
-                        "\nBook title: " + book.getBookTitle() +
+                                "\nBook title: " + book.getBookTitle() +
                                 "\nAuthor: " + book.getAuthor() +
                                 "\nYear: " + book.getYear() +
                                 "\n----------------------"
@@ -244,3 +318,4 @@ public class LibrarySystem {
         system.start();
     }
 }
+

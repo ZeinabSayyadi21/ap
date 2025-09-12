@@ -11,8 +11,10 @@ public class Loan {
     private Book book;
     private String startDate;
     private String endDate;
+    private String returnDate;
     private boolean returned;
     private boolean approved;
+    private boolean received;
 
     public Loan(Student student, Book book, String startDate, String endDate) {
         this.loanId = counter++;
@@ -22,6 +24,8 @@ public class Loan {
         this.endDate = endDate;
         this.returned = false;
         this.approved = false;
+        this.received = false;
+        this.returnDate = null;
     }
 
     public Loan(int loanId , Student student, Book book, String startDate, String endDate) {
@@ -32,6 +36,8 @@ public class Loan {
         this.endDate = endDate;
         this.returned = false;
         this.approved = false;
+        this.received = false;
+        this.returnDate = null;
         if (loanId >= counter) {
             counter = loanId +1;
         }
@@ -67,8 +73,16 @@ public class Loan {
         return endDate;
     }
 
+    public String getReturnDate() {
+        return returnDate;
+    }
+
     public boolean isReturned() {
         return returned;
+    }
+
+    public boolean isReceived() {
+        return received;
     }
 
     public void setReturned(boolean returned) {
@@ -83,6 +97,14 @@ public class Loan {
         this.approved = approved;
     }
 
+    public void setReceived(boolean received) {
+        this.received = received;
+    }
+
+    public void setReturnDate(String returnDate) {
+        this.returnDate = returnDate;
+    }
+
     @Override
     public String toString() {
         return  "Loan id: " + loanId +
@@ -90,6 +112,7 @@ public class Loan {
                 " , Book name: " + book.getBookTitle() +
                 " , Loan start date: " + startDate +
                 " , Loan end date: " + endDate +
+                " , Loan return date: " + returnDate +
                 " , Is Returned: " + returned +
                 " , Is Approved: " + approved;
     }

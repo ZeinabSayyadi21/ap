@@ -131,14 +131,15 @@ public class FileManager {
             for (Loan loan : loans) {
                 writer.println(loan.getLoanId() +","+loan.getStudent().getStudentId() +","+
                         loan.getBook().getBookId() +","+ loan.getStartDate()
-                        +","+loan.getEndDate() +","+loan.isReturned() +","+loan.isApproved());
+                        +","+loan.getEndDate()  +","+loan.getReturnDate() +","+loan.isReturned() +","+loan.isApproved()
+                        +","+loan.isReceived());
             }
         } catch (IOException e) {
             System.out.println("Error saving loans: " +e.getMessage());
         }
     }
 
-    private static List<Loan> loadLoans(List<Student> students, List<Book> books) {
+    public static List<Loan> loadLoans(List<Student> students, List<Book> books) {
         List<Loan> loans = new ArrayList<>();
         File file = new File(LOAN_FILE);
 
@@ -148,14 +149,16 @@ public class FileManager {
         try (Scanner scanner = new Scanner(file)){
             while (scanner.hasNextLine()) {
                 String[] parts = scanner.nextLine().split(",");
-                if (parts.length == 7) {
+                if (parts.length == 9) {
                     int loanId = Integer.parseInt(parts[0]);
                     String studentId = parts[1];
                     int bookId = Integer.parseInt(parts[2]);
                     String startDate = parts[3];
                     String endDate = parts[4];
-                    boolean returned = Boolean.parseBoolean(parts[5]);
-                    boolean approved = Boolean.parseBoolean(parts[6]);
+                    String returnDate = parts[5];
+                    boolean returned = Boolean.parseBoolean(parts[6]);
+                    boolean approved = Boolean.parseBoolean(parts[7]);
+                    boolean received = Boolean.parseBoolean(parts[8]);
 
                     Student student = students.stream()
                             .filter( student1 -> student1.getStudentId().equals(studentId))
@@ -171,6 +174,7 @@ public class FileManager {
                        Loan loan = new Loan(loanId, student, book, startDate, endDate);
                        loan.setReturned(returned);
                        loan.setApproved(approved);
+                       loan.setReceived(received);
                        loans.add(loan);
                    }
                 }
