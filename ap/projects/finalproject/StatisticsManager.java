@@ -112,4 +112,80 @@ public class StatisticsManager {
         System.out.println("Total Approved Loans: " + totalApproved);
         System.out.println("Average Loan Duration (days): " + avgLoanDays);
     }
+
+
+    public void printAllStudentsStatistics() {
+        System.out.println("\n=== All Students Loan Statistics ===");
+
+
+        List<StudentStats> studentStatsList = students.stream()
+                .map(student -> {
+                    List<Loan> studentLoans = loans.stream()
+                            .filter(l -> l.getStudent().getStudentId().equals(student.getStudentId()))
+                            .collect(Collectors.toList());
+
+                    long totalLoans = studentLoans.size();
+                    long notReturned = studentLoans.stream()
+                            .filter(l -> !l.isReturned() && l.isReceived())
+                            .count();
+                    long lateReturns = studentLoans.stream()
+                            .filter(Loan::isReturned)
+                            .filter(l -> l.getReturnDate() != null && l.getEndDate() != null &&
+                                    LocalDate.parse(l.getReturnDate()).isAfter(LocalDate.parse(l.getEndDate())))
+                            .count();
+
+                    return new StudentStats(student, totalLoans, notReturned, lateReturns);
+                })
+                .collect(Collectors.toList());
+
+        long totalStudents = studentStatsList.size();
+        long totalLoans = studentStatsList.stream().mapToLong(StudentStats::getTotalLoans).sum();
+        long totalNotReturned = studentStatsList.stream().mapToLong(StudentStats::getNotReturned).sum();
+        long totalLateReturns = studentStatsList.stream().mapToLong(StudentStats::getLateReturns).sum();
+
+        System.out.println("Total Students: " + totalStudents);
+        System.out.println("Total Loans: " + totalLoans);
+        System.out.println("Total Not Returned: " + totalNotReturned);
+        System.out.println("Total Late Returns: " + totalLateReturns);
+
+        System.out.println("\n=== Top 10 Students with Most Late Returns ===");
+        studentStatsList.stream()
+                .filter(stats -> stats.getLateReturns() > 0)
+                .sorted((s1, s2) -> Long.compare(s2.getLateReturns(), s1.getLateReturns()))
+                .limit(10)
+                .forEach(stats -> {
+                    System.out.println("Student: " + stats.getStudent().getName() +
+                            " | Late Returns: " + stats.getLateReturns() +
+                            " | Total Loans: " + stats.getTotalLoans() +
+                            " | Not Returned: " + stats.getNotReturned());
+                });
+
+        System.out.println("\n=== Students with Not Returned Books ===");
+        studentStatsList.stream()
+                .filter(stats -> stats.getNotReturned() > 0)
+                .forEach(stats -> {
+                    System.out.println("Student: " + stats.getStudent().getName() +
+                            " | Not Returned: " + stats.getNotReturned() +
+                            " | Total Loans: " + stats.getTotalLoans());
+                });
+    }
+
+    private static class StudentStats {
+        private Student student;
+        private long totalLoans;
+        private long notReturned;
+        private long lateReturns;
+
+        public StudentStats(Student student, long totalLoans, long notReturned, long lateReturns) {
+            this.student = student;
+            this.totalLoans = totalLoans;
+            this.notReturned = notReturned;
+            this.lateReturns = lateReturns;
+        }
+
+        public Student getStudent() { return student; }
+        public long getTotalLoans() { return totalLoans; }
+        public long getNotReturned() { return notReturned; }
+        public long getLateReturns() { return lateReturns; }
+    }
 }

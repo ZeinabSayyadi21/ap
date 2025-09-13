@@ -235,11 +235,12 @@ public class MenuHandler {
             System.out.println("3. remove Employee");
             System.out.println("4. View employee performance");
             System.out.println("5. View loan statistics");
-            System.out.println("6. Logout");
+            System.out.println("6. View all students statistics");
+            System.out.println("7. Logout");
 
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 6);
+            int choice = getIntInput(1, 7);
 
             switch (choice) {
                 case 1 :
@@ -264,6 +265,9 @@ public class MenuHandler {
                     statisticsManager.printLoanStatistics(loanManager.getLoans());
                     break;
                 case 6 :
+                    statisticsManager.printAllStudentsStatistics();
+                    break;
+                case 7 :
                     System.out.println("Return to main menu");
                     return;
                 default:
