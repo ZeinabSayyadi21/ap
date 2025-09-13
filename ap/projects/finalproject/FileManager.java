@@ -62,8 +62,13 @@ public class FileManager {
     public static void saveEmployees(List<Employee> employees) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(EMPLOYEE_FILE))) {
             for (Employee employee : employees) {
-                writer.println(employee.getName() +","+ employee.getEmployeeId() +","+ employee.getUsername()
-                        +","+ employee.getPassword());
+                writer.println(employee.getName() + "," +
+                        employee.getEmployeeId() + "," +
+                        employee.getUsername() + "," +
+                        employee.getPassword() + "," +
+                        employee.getAddBookCount() + "," +
+                        employee.getLoanApproveCount() + "," +
+                        employee.getLoanReturnedCount());
             }
         } catch (IOException e) {
             System.out.println("Error saving employees: " +e.getMessage());
@@ -75,8 +80,19 @@ public class FileManager {
         try (Scanner scanner = new Scanner(new File(EMPLOYEE_FILE))) {
             while (scanner.hasNextLine()) {
                 String[] parts = scanner.nextLine().split(",");
-                if (parts.length == 4) {
-                    employees.add(new Employee(parts[0], parts[1], parts[2], parts[3]));
+                if (parts.length >= 4) {
+                    String name = parts[0];
+                    String employeeId = parts[1];
+                    String username = parts[2];
+                    String password = parts[3];
+
+
+                    int addBookCount = parts.length > 4 ? Integer.parseInt(parts[4]) : 0;
+                    int loanApproveCount = parts.length > 5 ? Integer.parseInt(parts[5]) : 0;
+                    int loanReturnedCount = parts.length > 6 ? Integer.parseInt(parts[6]) : 0;
+
+                    employees.add(new Employee(name, employeeId, username, password,
+                            addBookCount, loanApproveCount, loanReturnedCount));
                 }
             }
         } catch (FileNotFoundException e) {

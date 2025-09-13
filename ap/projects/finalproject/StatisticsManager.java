@@ -74,4 +74,11 @@ public class StatisticsManager {
             });
         }
     }
+
+    public void showEmployeePerformance(Employee employee) {
+        System.out.println("\n=== Employee Performance: " + employee.getName() + " ===");
+        System.out.println("Books Registered: " + employee.getAddBookCount());
+        System.out.println("Loans Approved: " + employee.getLoanApproveCount());
+        System.out.println("Loans Returned: " + employee.getLoanReturnedCount());
+    }
 }

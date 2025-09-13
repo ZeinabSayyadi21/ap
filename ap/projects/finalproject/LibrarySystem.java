@@ -157,7 +157,7 @@ public class LibrarySystem {
         System.out.println("Your borrow request has been registered successfully.");
     }
 
-    public void approveLoans() {
+    public void approveLoans(Employee employee) {
         System.out.println("=== Pending Loan Requests ===");
 
         List<Loan> loans = loanManager.getLoans();
@@ -180,6 +180,8 @@ public class LibrarySystem {
             loan.getBook().setAvailable(false);
             FileManager.saveLoans(loans);
             FileManager.saveBooks(bookManager.getBooks());
+            employee.incrementLoansApproved();
+            FileManager.saveEmployees(employeeManager.getEmployees());
 
             System.out.println("Loan approved successfully!");
         } else {
@@ -294,6 +296,46 @@ public class LibrarySystem {
     }
 
 
+    public void returnBookFromStudent(Employee employee, Student student) {
+
+        List<Loan> loans = loanManager.getLoans();
+        List<Loan> studentLoans = loans.stream()
+                .filter(l -> l.getStudent() != null &&
+                        l.getStudent().getId().equals(student.getId()))
+                .filter(l -> l.getReturnDate() == null ||
+                        l.getReturnDate().isEmpty())
+                .collect(Collectors.toList());
+
+        if (studentLoans.isEmpty()) {
+            System.out.println("This student has no active loans.");
+            return;
+        }
+
+        studentLoans.forEach(System.out::println);
+
+        int loanId = input.getInt("Enter Loan ID to return (0 to cancel): ");
+        if (loanId == 0) return;
+
+        Loan loan = studentLoans.stream()
+                .filter(l -> l.getLoanId() == loanId)
+                .findFirst()
+                .orElse(null);
+
+        if (loan != null) {
+            loan.setReturnDate(LocalDate.now().toString());
+            loan.setReturned(true);
+
+            loan.getBook().setAvailable(true);
+            FileManager.saveLoans(loans);
+            FileManager.saveBooks(bookManager.getBooks());
+
+            employee.incrementLoansReturned();
+
+            System.out.println("Book returned successfully!");
+        } else {
+            System.out.println("Loan not found!");
+        }
+    }
 
 
     public void displayAvailableBooks() {

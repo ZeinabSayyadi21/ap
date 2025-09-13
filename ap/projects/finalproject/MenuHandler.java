@@ -233,11 +233,12 @@ public class MenuHandler {
             System.out.println("1. add Employee");
             System.out.println("2. View Employees");
             System.out.println("3. remove Employee");
-            System.out.println("4. Logout");
+            System.out.println("4. View employee performance");
+            System.out.println("5. Logout");
 
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 4);
+            int choice = getIntInput(1, 5);
 
             switch (choice) {
                 case 1 :
@@ -250,6 +251,15 @@ public class MenuHandler {
                     librarySystem.removeEmployee();
                     break;
                 case 4 :
+                    String employeeId = input.getString("Please enter Employee ID that you want to look performance: ");
+                    Employee employee = employeeManager.getEmployeeById(employeeId);
+                    if (employee != null) {
+                        statisticsManager.showEmployeePerformance(employee);
+                    } else {
+                        System.out.println("Employee not found!");
+                    }
+                    break;
+                case 5 :
                     System.out.println("Return to main menu");
                     return;
                 default:
@@ -267,11 +277,12 @@ public class MenuHandler {
             System.out.println("4. Search and edit books");
             System.out.println("5. Active or Inactive student");
             System.out.println("6. Approve loan requests");
-            System.out.println("7. Logout");
+            System.out.println("7. Return Book From Student");
+            System.out.println("8. Logout");
 
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 7);
+            int choice = getIntInput(1, 8);
 
             switch (choice) {
                 case 1 :
@@ -284,7 +295,7 @@ public class MenuHandler {
                     employeeManager.changePassword(employee, oldPass, newPass);
                     break;
                 case 3 :
-                    bookRegistration();
+                    bookRegistration(employee);
                     break;
                 case 4 :
                     librarySystem.editBookInformation();
@@ -294,9 +305,22 @@ public class MenuHandler {
                     studentManager.toggleStudentStatus(studentId);
                     break;
                 case 6 :
-                    librarySystem.approveLoans();
+                    librarySystem.approveLoans(employee);
                     break;
                 case 7 :
+                    String id = input.getString("Please enter student ID to return book: ");
+                    Student student = studentManager.getStudents().stream()
+                            .filter(s -> s.getStudentId().equals(id))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (student != null) {
+                        librarySystem.returnBookFromStudent(employee, student);
+                    } else {
+                        System.out.println("Student not found!");
+                    }
+                    break;
+                case 8 :
                     System.out.println("Return to main menu");
                     return;
                 default:
@@ -305,13 +329,17 @@ public class MenuHandler {
         }
     }
 
-    private void bookRegistration() {
+    private void bookRegistration(Employee employee) {
         String bookTitle = input.getString("Please enter book title: ");
         String author = input.getString("Please enter author: ");
         String year = input.getString("Please enter year: ");
 
         Book book = new Book(bookTitle, author, year, true);
         bookManager.addBook(book);
+        FileManager.saveBooks(bookManager.getBooks());
+        employee.incrementBooksRegistered();
+        FileManager.saveEmployees(employeeManager.getEmployees());
+
         System.out.println("Book added successfully!");
     }
 

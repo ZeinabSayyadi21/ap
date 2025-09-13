@@ -64,7 +64,8 @@ public class StudentManager {
         }
 
         for (Student student : students) {
-            System.out.println(student);
+            System.out.println(student.getUserInfo() + " , Status: " +
+                    (student.isActive() ? "Active" : "Inactive"));
         }
     }
 

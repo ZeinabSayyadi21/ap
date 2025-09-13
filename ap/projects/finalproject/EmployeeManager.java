@@ -55,4 +55,13 @@ public class EmployeeManager {
     public void removeEmployee(String username) {
         employees.removeIf(employee -> employee.getUsername().equals(username));
     }
+
+    public Employee getEmployeeById(String employeeId) {
+        for (Employee employee : employees) {
+            if (employee.getEmployeeId().equals(employeeId)) {
+                return employee;
+            }
+        }
+        return null;
+    }
 }

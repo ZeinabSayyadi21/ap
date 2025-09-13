@@ -1,49 +1,36 @@
 package ap.projects.finalproject;
 
-public class Student {
+public class Student extends User {
 
-    private String name;
-    private String studentId;
-    private String username;
-    private String password;
     private boolean active = true;
 
     public Student(String name, String studentId, String username, String password) {
-        this.name = name;
-        this.studentId = studentId;
-        this.username = username;
-        this.password = password;
+        super(name, studentId, username, password);
     }
 
-    public String getName() {
-        return name;
+    public String getId() {
+        return super.getId();
     }
 
     public String getStudentId() {
-        return studentId;
+        return super.getId();
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
+    //public boolean isActive() {
+    //    return active;
+    //}
 
     public void setActive(boolean active) {
         this.active = active;
     }
 
     @Override
+    public boolean isActive() {
+        return active;
+    }
+
+    @Override
     public String toString() {
-        return "Name: " + name +
-                " , Student ID: " + studentId +
-                " , Username: " + username +
-                " , Status: " + (active ? "Active" : "Inactive");
+        return getUserInfo() + " , Status: " + (active ? "Active" : "Inactive");
     }
 }

@@ -1,55 +1,62 @@
 package ap.projects.finalproject;
 
-public class Employee {
+public class Employee extends User {
 
-    private String name;
-    private String employeeId;
-    private String username;
-    private String password;
+    private int addBookCount = 0;
+    private int loanApproveCount = 0;
+    private int loanReturnedCount = 0;
 
-    public Employee(String name, String employeeId, String username, String password) {
-        this.name = name;
-        this.employeeId = employeeId;
-        this.username = username;
-        this.password = password;
+    public Employee(String name, String employeeId, String username, String password,
+                    int addBookCount, int loanApproveCount, int loanReturnedCount) {
+        super(name, employeeId, username, password);
+        this.addBookCount = addBookCount;
+        this.loanApproveCount = loanApproveCount;
+        this.loanReturnedCount = loanReturnedCount;
     }
 
-    public String getName() {
-        return name;
+    public Employee(String name, String employeeId, String username, String password) {
+       super(name, employeeId, username, password);
+    }
+
+    public String getId() {
+        return super.getId();
     }
 
     public String getEmployeeId() {
-        return employeeId;
+        return super.getId();
     }
 
-    public String getUsername() {
-        return username;
+    public void incrementBooksRegistered() {
+        addBookCount++;
     }
 
-    public String getPassword() {
-        return password;
+    public void incrementLoansApproved() {
+        loanApproveCount++;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void incrementLoansReturned() {
+        loanReturnedCount++;
     }
 
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
+    public int getAddBookCount() {
+        return addBookCount;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public int getLoanApproveCount() {
+        return loanApproveCount;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public int getLoanReturnedCount() {
+        return loanReturnedCount;
+    }
+
+    @Override
+    public boolean isActive() {
+        return true;
     }
 
     @Override
     public String toString() {
-        return "Name: " + name +
-                " , Employee ID: " + employeeId +
-                " , Username: " + username;
+        return getUserInfo();
     }
 }
