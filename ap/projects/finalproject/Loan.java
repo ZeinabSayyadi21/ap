@@ -11,6 +11,7 @@ public class Loan {
     private Book book;
     private String startDate;
     private String endDate;
+    private String receiveDate;
     private String returnDate;
     private boolean returned;
     private boolean approved;
@@ -26,6 +27,7 @@ public class Loan {
         this.approved = false;
         this.received = false;
         this.returnDate = null;
+        this.receiveDate = null;
     }
 
     public Loan(int loanId , Student student, Book book, String startDate, String endDate) {
@@ -38,6 +40,7 @@ public class Loan {
         this.approved = false;
         this.received = false;
         this.returnDate = null;
+        this.receiveDate = null;
         if (loanId >= counter) {
             counter = loanId +1;
         }
@@ -73,6 +76,10 @@ public class Loan {
         return endDate;
     }
 
+    public String getReceivedDate() {
+        return receiveDate;
+    }
+
     public String getReturnDate() {
         return returnDate;
     }
@@ -99,6 +106,10 @@ public class Loan {
 
     public void setReceived(boolean received) {
         this.received = received;
+    }
+
+    public void setReceiveDate(String receiveDate) {
+        this.receiveDate = receiveDate;
     }
 
     public void setReturnDate(String returnDate) {

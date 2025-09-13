@@ -11,17 +11,21 @@ public class MenuHandler {
     private BookManager bookManager;
     private EmployeeManager employeeManager;
     private StudentManager studentManager;
+    private LoanManager loanManager;
+    private StatisticsManager statisticsManager;
 
     InputHandler input = new InputHandler();
 
-    public MenuHandler(LibrarySystem librarySystem , BookManager bookManager , EmployeeManager employeeManager) {
+    public MenuHandler(LibrarySystem librarySystem, BookManager bookManager, EmployeeManager employeeManager,
+                       LoanManager loanManager, StatisticsManager statisticsManager) {
         this.scanner = new Scanner(System.in);
         this.librarySystem = librarySystem;
         this.currentUser = null;
         this.bookManager = bookManager;
         this.employeeManager = employeeManager;
+        this.loanManager = loanManager;
+        this.statisticsManager = statisticsManager;
         this.studentManager = new StudentManager();
-
     }
 
     public void displayMainMenu() {
@@ -176,10 +180,11 @@ public class MenuHandler {
             System.out.println("5. Receive Loan By Student");
             System.out.println("6. Return a Book");
             System.out.println("7. View Available Books");
-            System.out.println("8. Logout");
+            System.out.println("8. show loan's statistics");
+            System.out.println("9. Logout");
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 8);
+            int choice = getIntInput(1, 9);
 
             switch (choice) {
                 case 1:
@@ -204,7 +209,15 @@ public class MenuHandler {
                 case 7 :
                     librarySystem.displayAvailableBooks();
                     break;
-                case 8 :
+                case 8:
+                    if (loanManager != null && statisticsManager != null) {
+                        loanManager.showLoanHistory(currentUser);
+                        statisticsManager.printStudentLoanStatistics(currentUser, loanManager.getLoans());
+                    } else {
+                        System.out.println("Loan manager or statistics manager is not initialized!");
+                    }
+                    break;
+                case 9 :
                     currentUser = null;
                     System.out.println("Logged out successfully.");
                     return;

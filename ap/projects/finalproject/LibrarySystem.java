@@ -22,11 +22,20 @@ public class LibrarySystem {
         this.bookManager = new BookManager();
         this.loanManager = new LoanManager(studentManager, bookManager);
         this.employeeManager = new EmployeeManager();
-        this.menuHandler = new MenuHandler(this, this.bookManager, this.employeeManager);
-        this.statisticsManager = new StatisticsManager(studentManager.getStudents(), bookManager.getBooks(),
-                loanManager.getLoans());
+        this.statisticsManager = new StatisticsManager(
+                studentManager.getStudents(),
+                bookManager.getBooks(),
+                loanManager.getLoans()
+        );
 
 
+        this.menuHandler = new MenuHandler(
+                this,
+                this.bookManager,
+                this.employeeManager,
+                this.loanManager,
+                this.statisticsManager
+        );
     }
 
     public void showStatistics() {

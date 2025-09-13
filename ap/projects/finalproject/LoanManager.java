@@ -51,6 +51,28 @@ public class LoanManager {
                 .forEach(System.out::println);
     }
 
+    public void showLoanHistory(Student student) {
+        System.out.println("\n=== Loan History for " + student.getName() + " ===");
+
+        List<Loan> studentLoans = loans.stream()
+                .filter(l -> l.getStudent().getStudentId().equals(student.getStudentId()))
+                .collect(Collectors.toList());
+
+        if (studentLoans.isEmpty()) {
+            System.out.println("No loans found for this student.");
+            return;
+        }
+
+        studentLoans.forEach(loan -> {
+            System.out.println("Loan ID: " + loan.getLoanId());
+            System.out.println("Book title: " + loan.getBook().getBookTitle());
+            System.out.println("Start date: " + loan.getStartDate());
+            System.out.println("End date: " + loan.getEndDate());
+            System.out.println("Receive date: " + (loan.isReceived() ? loan.getReceivedDate() : "Not received yet"));
+            System.out.println("-------------------------");
+        });
+    }
+
     public void printAllLoans() {
         if (loans.isEmpty()) {
             System.out.println("There is no loans yet!");
