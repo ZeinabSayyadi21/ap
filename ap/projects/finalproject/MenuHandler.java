@@ -234,11 +234,12 @@ public class MenuHandler {
             System.out.println("2. View Employees");
             System.out.println("3. remove Employee");
             System.out.println("4. View employee performance");
-            System.out.println("5. Logout");
+            System.out.println("5. View loan statistics");
+            System.out.println("6. Logout");
 
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 5);
+            int choice = getIntInput(1, 6);
 
             switch (choice) {
                 case 1 :
@@ -260,6 +261,9 @@ public class MenuHandler {
                     }
                     break;
                 case 5 :
+                    statisticsManager.printLoanStatistics(loanManager.getLoans());
+                    break;
+                case 6 :
                     System.out.println("Return to main menu");
                     return;
                 default:
@@ -337,7 +341,7 @@ public class MenuHandler {
         Book book = new Book(bookTitle, author, year, true);
         bookManager.addBook(book);
         FileManager.saveBooks(bookManager.getBooks());
-        employee.incrementBooksRegistered();
+        employee.incrementBooksRegistered(employeeManager);
         FileManager.saveEmployees(employeeManager.getEmployees());
 
         System.out.println("Book added successfully!");

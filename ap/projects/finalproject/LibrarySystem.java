@@ -180,7 +180,7 @@ public class LibrarySystem {
             loan.getBook().setAvailable(false);
             FileManager.saveLoans(loans);
             FileManager.saveBooks(bookManager.getBooks());
-            employee.incrementLoansApproved();
+            employee.incrementLoansApproved(employeeManager);
             FileManager.saveEmployees(employeeManager.getEmployees());
 
             System.out.println("Loan approved successfully!");
@@ -329,7 +329,7 @@ public class LibrarySystem {
             FileManager.saveLoans(loans);
             FileManager.saveBooks(bookManager.getBooks());
 
-            employee.incrementLoansReturned();
+            employee.incrementLoansReturned(employeeManager);
 
             System.out.println("Book returned successfully!");
         } else {

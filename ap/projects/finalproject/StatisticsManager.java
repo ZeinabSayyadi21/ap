@@ -2,6 +2,7 @@ package ap.projects.finalproject;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,5 +81,35 @@ public class StatisticsManager {
         System.out.println("Books Registered: " + employee.getAddBookCount());
         System.out.println("Loans Approved: " + employee.getLoanApproveCount());
         System.out.println("Loans Returned: " + employee.getLoanReturnedCount());
+    }
+
+    public void printLoanStatistics(List<Loan> loans) {
+        System.out.println("\n=== Overall Loan Statistics ===");
+
+        long totalRequests = loans.size();
+
+        long totalApproved = loans.stream()
+                .filter(Loan::isApproved)
+                .count();
+
+        List<Loan> completedLoans = loans.stream()
+                .filter(l -> l.getReturnDate() != null)
+                .collect(Collectors.toList());
+
+        double avgLoanDays = 0;
+        if (!completedLoans.isEmpty()) {
+            avgLoanDays = completedLoans.stream()
+                    .mapToLong(l -> {
+                        LocalDate received = LocalDate.parse(l.getReceivedDate());
+                        LocalDate returned = LocalDate.parse(l.getReturnDate());
+                        return ChronoUnit.DAYS.between(received, returned);
+                    })
+                    .average()
+                    .orElse(0);
+        }
+
+        System.out.println("Total Loan Requests: " + totalRequests);
+        System.out.println("Total Approved Loans: " + totalApproved);
+        System.out.println("Average Loan Duration (days): " + avgLoanDays);
     }
 }

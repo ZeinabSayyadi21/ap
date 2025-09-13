@@ -26,16 +26,19 @@ public class Employee extends User {
         return super.getId();
     }
 
-    public void incrementBooksRegistered() {
+    public void incrementBooksRegistered(EmployeeManager employeeManager) {
         addBookCount++;
+        FileManager.saveEmployees(employeeManager.getEmployees());
     }
 
-    public void incrementLoansApproved() {
+    public void incrementLoansApproved(EmployeeManager employeeManager) {
         loanApproveCount++;
+        FileManager.saveEmployees(employeeManager.getEmployees());
     }
 
-    public void incrementLoansReturned() {
+    public void incrementLoansReturned(EmployeeManager employeeManager) {
         loanReturnedCount++;
+        FileManager.saveEmployees(employeeManager.getEmployees());
     }
 
     public int getAddBookCount() {
