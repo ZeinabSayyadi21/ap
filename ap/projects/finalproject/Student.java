@@ -16,9 +16,6 @@ public class Student extends User {
         return super.getId();
     }
 
-    //public boolean isActive() {
-    //    return active;
-    //}
 
     public void setActive(boolean active) {
         this.active = active;

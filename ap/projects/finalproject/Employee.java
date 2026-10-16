@@ -28,17 +28,17 @@ public class Employee extends User {
 
     public void incrementBooksRegistered(EmployeeManager employeeManager) {
         addBookCount++;
-        FileManager.saveEmployees(employeeManager.getEmployees());
+        DatabaseManager.saveEmployees(employeeManager.getEmployees());
     }
 
     public void incrementLoansApproved(EmployeeManager employeeManager) {
         loanApproveCount++;
-        FileManager.saveEmployees(employeeManager.getEmployees());
+        DatabaseManager.saveEmployees(employeeManager.getEmployees());
     }
 
     public void incrementLoansReturned(EmployeeManager employeeManager) {
         loanReturnedCount++;
-        FileManager.saveEmployees(employeeManager.getEmployees());
+        DatabaseManager.saveEmployees(employeeManager.getEmployees());
     }
 
     public int getAddBookCount() {

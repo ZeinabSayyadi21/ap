@@ -18,6 +18,8 @@ public class LibrarySystem {
 
 
     public LibrarySystem() {
+        DatabaseManager.initDatabase();
+
         this.studentManager = new StudentManager();
         this.bookManager = new BookManager();
         this.loanManager = new LoanManager(studentManager, bookManager);
@@ -34,13 +36,18 @@ public class LibrarySystem {
                 this.bookManager,
                 this.employeeManager,
                 this.loanManager,
-                this.statisticsManager
+                this.statisticsManager,
+                this.studentManager
         );
     }
 
     public void showStatistics() {
+        showStatistics(5);
+    }
+
+    public void showStatistics(int lastLoansCount) {
         statisticsManager.showStatistics();
-        loanManager.showLastLoans(5);
+        loanManager.showLastLoans(lastLoansCount);
     }
 
 
@@ -57,7 +64,18 @@ public class LibrarySystem {
     }
 
     public void editStudentInformation(Student student) {
-        System.out.println("Not implemented.");
+        System.out.println("\n--- Edit My Information (ID and username cannot be changed) ---");
+
+        String newName = input.getString("Please enter new name or skip it: ");
+        if (!newName.trim().isEmpty())
+            student.setName(newName);
+
+        String newPassword = input.getString("Please enter new password or skip it: ");
+        if (!newPassword.trim().isEmpty())
+            student.setPassword(newPassword);
+
+        DatabaseManager.saveStudents(studentManager.getStudents());
+        System.out.println("Your information updated successfully!");
     }
 
     public List<Book> searchingBook() {
@@ -105,6 +123,8 @@ public class LibrarySystem {
                 .orElse(null);
         if (book != null) {
             bookManager.editBook(book);
+        } else {
+            System.out.println("Book not found!");
         }
     }
 
@@ -132,7 +152,7 @@ public class LibrarySystem {
         }
 
         int choice = input.getInt("Select the number of the book you want to borrow (0 to cancel): ");
-        if (choice == 0 || choice > results.size()) {
+        if (choice <= 0 || choice > results.size()) {
             System.out.println("Borrow request canceled.");
             return;
         }
@@ -145,6 +165,11 @@ public class LibrarySystem {
         }
 
         int days = input.getInt("Enter borrowing duration in days: ");
+        if (days <= 0) {
+            System.out.println("Invalid borrowing duration. Borrow request canceled.");
+            return;
+        }
+
         String startDate = LocalDate.now().toString();
         String endDate = LocalDate.now().plusDays(days).toString();
 
@@ -152,7 +177,7 @@ public class LibrarySystem {
         loanManager.addLoan(newLoan);
 
         selectedBook.setAvailable(false);
-        FileManager.saveBooks(bookManager.getBooks());
+        DatabaseManager.saveBooks(bookManager.getBooks());
 
         System.out.println("Your borrow request has been registered successfully.");
     }
@@ -161,16 +186,21 @@ public class LibrarySystem {
         System.out.println("=== Pending Loan Requests ===");
 
         List<Loan> loans = loanManager.getLoans();
-        loans.stream()
-                .filter(l -> !l.isApproved()
-                        && (l.getStartDateAsDate().isEqual(LocalDate.now())
-                        || l.getStartDateAsDate().isEqual(LocalDate.now().minusDays(1))))
-                .forEach(System.out::println);
+        List<Loan> pending = loans.stream()
+                .filter(l -> !l.isApproved())
+                .collect(Collectors.toList());
+
+        if (pending.isEmpty()) {
+            System.out.println("There is no pending loan request.");
+            return;
+        }
+
+        pending.forEach(System.out::println);
 
         int loanId = input.getInt("Enter Loan ID to approve (0 to cancel): ");
         if (loanId == 0) return;
 
-        Loan loan = loans.stream()
+        Loan loan = pending.stream()
                 .filter(l -> l.getLoanId() == loanId)
                 .findFirst()
                 .orElse(null);
@@ -178,12 +208,46 @@ public class LibrarySystem {
         if (loan != null) {
             loan.setApproved(true);
             loan.getBook().setAvailable(false);
-            FileManager.saveLoans(loans);
-            FileManager.saveBooks(bookManager.getBooks());
+            DatabaseManager.saveLoans(loans);
+            DatabaseManager.saveBooks(bookManager.getBooks());
             employee.incrementLoansApproved(employeeManager);
-            FileManager.saveEmployees(employeeManager.getEmployees());
 
             System.out.println("Loan approved successfully!");
+        } else {
+            System.out.println("Loan not found.");
+        }
+    }
+
+    public void cancelLoanRequest() {
+        System.out.println("=== Pending Loan Requests ===");
+
+        List<Loan> loans = loanManager.getLoans();
+        List<Loan> pending = loans.stream()
+                .filter(l -> !l.isApproved())
+                .collect(Collectors.toList());
+
+        if (pending.isEmpty()) {
+            System.out.println("There is no pending loan request.");
+            return;
+        }
+
+        pending.forEach(System.out::println);
+
+        int loanId = input.getInt("Enter Loan ID to reject (0 to cancel): ");
+        if (loanId == 0) return;
+
+        Loan loan = pending.stream()
+                .filter(l -> l.getLoanId() == loanId)
+                .findFirst()
+                .orElse(null);
+
+        if (loan != null) {
+            loans.remove(loan);
+            loan.getBook().setAvailable(true);
+            DatabaseManager.saveLoans(loans);
+            DatabaseManager.saveBooks(bookManager.getBooks());
+
+            System.out.println("Loan request rejected. The book is available again.");
         } else {
             System.out.println("Loan not found.");
         }
@@ -194,7 +258,7 @@ public class LibrarySystem {
 
         List<Loan> loans = loanManager.getLoans();
         List<Loan> pendingPickups = loans.stream()
-                .filter(l -> l.getStudent().getStudentId() == student.getStudentId())
+                .filter(l -> l.getStudent().getStudentId().equals(student.getStudentId()))
                 .filter(Loan::isApproved)
                 .filter(l -> !l.isReceived())
                 .collect(Collectors.toList());
@@ -217,7 +281,8 @@ public class LibrarySystem {
 
         if (loan != null) {
             loan.setReceived(true);
-            FileManager.saveLoans(loans);
+            loan.setReceiveDate(LocalDate.now().toString());
+            DatabaseManager.saveLoans(loans);
             System.out.println("You have successfully received the book: " + loan.getBook().getBookTitle());
         } else {
             System.out.println("Invalid Loan ID!");
@@ -237,7 +302,6 @@ public class LibrarySystem {
     public void removeEmployee() {
         String username = input.getString("Please enter username of employee you want to remove: ");
         employeeManager.removeEmployee(username);
-        System.out.println("Employee removed successfully!");
     }
 
     public void viewEmployees() {
@@ -261,7 +325,7 @@ public class LibrarySystem {
 
         List<Loan> loans = loanManager.getLoans();
         List<Loan> activeLoans = loans.stream()
-                .filter(l -> l.getStudent().getStudentId() == student.getStudentId())
+                .filter(l -> l.getStudent().getStudentId().equals(student.getStudentId()))
                 .filter(Loan::isReceived)
                 .filter(l -> !l.isReturned())
                 .collect(Collectors.toList());
@@ -286,8 +350,8 @@ public class LibrarySystem {
             loan.setReturnDate(LocalDate.now().toString());
             loan.getBook().setAvailable(true);
 
-            FileManager.saveLoans(loans);
-            FileManager.saveBooks(bookManager.getBooks());
+            DatabaseManager.saveLoans(loans);
+            DatabaseManager.saveBooks(bookManager.getBooks());
 
             System.out.println("Book returned successfully: " + loan.getBook().getBookTitle());
         } else {
@@ -302,6 +366,7 @@ public class LibrarySystem {
         List<Loan> studentLoans = loans.stream()
                 .filter(l -> l.getStudent() != null &&
                         l.getStudent().getId().equals(student.getId()))
+                .filter(l -> !l.isReturned())
                 .filter(l -> l.getReturnDate() == null ||
                         l.getReturnDate().isEmpty())
                 .collect(Collectors.toList());
@@ -326,8 +391,8 @@ public class LibrarySystem {
             loan.setReturned(true);
 
             loan.getBook().setAvailable(true);
-            FileManager.saveLoans(loans);
-            FileManager.saveBooks(bookManager.getBooks());
+            DatabaseManager.saveLoans(loans);
+            DatabaseManager.saveBooks(bookManager.getBooks());
 
             employee.incrementLoansReturned(employeeManager);
 

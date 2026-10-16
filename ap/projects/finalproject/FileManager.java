@@ -137,7 +137,7 @@ public class FileManager {
             Book.setCounter(maxId + 1);
 
         } catch (FileNotFoundException e) {
-            System.out.println("There is no students file!");
+            System.out.println("There is no books file! Starting with an empty library.");
         }
         return books;
     }
@@ -148,7 +148,7 @@ public class FileManager {
                 writer.println(loan.getLoanId() +","+loan.getStudent().getStudentId() +","+
                         loan.getBook().getBookId() +","+ loan.getStartDate()
                         +","+loan.getEndDate()  +","+loan.getReturnDate() +","+loan.isReturned() +","+loan.isApproved()
-                        +","+loan.isReceived());
+                        +","+loan.isReceived() +","+loan.getReceivedDate());
             }
         } catch (IOException e) {
             System.out.println("Error saving loans: " +e.getMessage());
@@ -165,16 +165,17 @@ public class FileManager {
         try (Scanner scanner = new Scanner(file)){
             while (scanner.hasNextLine()) {
                 String[] parts = scanner.nextLine().split(",");
-                if (parts.length == 9) {
+                if (parts.length >= 9) {
                     int loanId = Integer.parseInt(parts[0]);
                     String studentId = parts[1];
                     int bookId = Integer.parseInt(parts[2]);
                     String startDate = parts[3];
                     String endDate = parts[4];
-                    String returnDate = parts[5];
+                    String returnDate = "null".equals(parts[5]) ? null : parts[5];
                     boolean returned = Boolean.parseBoolean(parts[6]);
                     boolean approved = Boolean.parseBoolean(parts[7]);
                     boolean received = Boolean.parseBoolean(parts[8]);
+                    String receiveDate = parts.length >= 10 && !"null".equals(parts[9]) ? parts[9] : null;
 
                     Student student = students.stream()
                             .filter( student1 -> student1.getStudentId().equals(studentId))
@@ -191,6 +192,8 @@ public class FileManager {
                        loan.setReturned(returned);
                        loan.setApproved(approved);
                        loan.setReceived(received);
+                       loan.setReceiveDate(receiveDate);
+                       loan.setReturnDate(returnDate);
                        loans.add(loan);
                    }
                 }

@@ -1,11 +1,9 @@
 package ap.projects.finalproject;
 
 import java.util.List;
-import java.util.Scanner;
 
 public class MenuHandler {
 
-    private Scanner scanner;
     private LibrarySystem librarySystem;
     private Student currentUser;
     private BookManager bookManager;
@@ -17,15 +15,14 @@ public class MenuHandler {
     InputHandler input = new InputHandler();
 
     public MenuHandler(LibrarySystem librarySystem, BookManager bookManager, EmployeeManager employeeManager,
-                       LoanManager loanManager, StatisticsManager statisticsManager) {
-        this.scanner = new Scanner(System.in);
+                       LoanManager loanManager, StatisticsManager statisticsManager, StudentManager studentManager) {
         this.librarySystem = librarySystem;
         this.currentUser = null;
         this.bookManager = bookManager;
         this.employeeManager = employeeManager;
         this.loanManager = loanManager;
         this.statisticsManager = statisticsManager;
-        this.studentManager = new StudentManager();
+        this.studentManager = studentManager;
     }
 
     public void displayMainMenu() {
@@ -92,9 +89,9 @@ public class MenuHandler {
                     searchBookForGuest();
                     break;
                 case 3 :
-                    System.out.println("How many recent loans do you want to see?");
-                    int k = getIntInput(1 , 100);
-                    librarySystem.showStatistics();
+                    System.out.println("Show statistics with how many recent loans? (1-100)");
+                    int k = getIntInput(1, 100);
+                    librarySystem.showStatistics(k);
                     break;
                 case 4 :
                     System.out.println("Return to main menu");
@@ -136,17 +133,10 @@ public class MenuHandler {
     private void handleStudentRegistration() {
         System.out.println("\n--- New Student Registration ---");
 
-        System.out.print("Student name: ");
-        String name = scanner.nextLine();
-
-        System.out.print("Student ID: ");
-        String studentId = scanner.nextLine();
-
-        System.out.print("Username: ");
-        String username = scanner.nextLine();
-
-        System.out.print("Password: ");
-        String password = scanner.nextLine();
+        String name = input.getString("Student name: ");
+        String studentId = input.getString("Student ID: ");
+        String username = input.getString("Username: ");
+        String password = input.getString("Password: ");
 
         librarySystem.registerStudent(name, studentId, username, password);
     }
@@ -154,11 +144,8 @@ public class MenuHandler {
      private void handleStudentLogin() {
         System.out.println("\n=== Student Login ===");
 
-        System.out.print("Username: ");
-        String username = scanner.nextLine();
-
-        System.out.print("Password: ");
-        String password = scanner.nextLine();
+        String username = input.getString("Username: ");
+        String password = input.getString("Password: ");
 
         currentUser = librarySystem.authenticateStudent(username, password);
 
@@ -286,11 +273,12 @@ public class MenuHandler {
             System.out.println("5. Active or Inactive student");
             System.out.println("6. Approve loan requests");
             System.out.println("7. Return Book From Student");
-            System.out.println("8. Logout");
+            System.out.println("8. Reject a pending loan request");
+            System.out.println("9. Logout");
 
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 8);
+            int choice = getIntInput(1, 9);
 
             switch (choice) {
                 case 1 :
@@ -329,6 +317,9 @@ public class MenuHandler {
                     }
                     break;
                 case 8 :
+                    librarySystem.cancelLoanRequest();
+                    break;
+                case 9 :
                     System.out.println("Return to main menu");
                     return;
                 default:
@@ -344,24 +335,18 @@ public class MenuHandler {
 
         Book book = new Book(bookTitle, author, year, true);
         bookManager.addBook(book);
-        FileManager.saveBooks(bookManager.getBooks());
         employee.incrementBooksRegistered(employeeManager);
-        FileManager.saveEmployees(employeeManager.getEmployees());
 
         System.out.println("Book added successfully!");
     }
 
     private int getIntInput(int min, int max) {
         while (true) {
-            try {
-                int input = Integer.parseInt(scanner.nextLine());
-                if (input >= min && input <= max) {
-                    return input;
-                }
-                System.out.printf("Please enter a number between %d and %d: ", min, max);
-            } catch (NumberFormatException e) {
-                System.out.print("Invalid input. Please enter a number: ");
+            int input = this.input.getInt("");
+            if (input >= min && input <= max) {
+                return input;
             }
+            System.out.printf("Please enter a number between %d and %d: ", min, max);
         }
     }
 }

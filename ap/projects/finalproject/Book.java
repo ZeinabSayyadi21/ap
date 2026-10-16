@@ -15,7 +15,7 @@ public class Book {
         this.bookTitle = bookTitle;
         this.author = author;
         this.year = year;
-        this.isAvailable = true;
+        this.isAvailable = isAvailable;
     }
 
     public int getBookId() {
@@ -65,7 +65,7 @@ public class Book {
     @Override
     public String toString() {
         return "Book id: " + bookId +
-                "Book title: " + bookTitle +
+                " , Book title: " + bookTitle +
                 " , Author: " + author +
                 " , Year: " + year +
                 " , Inventory status: " + isAvailable;

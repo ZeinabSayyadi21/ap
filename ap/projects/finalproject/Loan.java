@@ -123,7 +123,7 @@ public class Loan {
                 " , Book name: " + book.getBookTitle() +
                 " , Loan start date: " + startDate +
                 " , Loan end date: " + endDate +
-                " , Loan return date: " + returnDate +
+                " , Loan return date: " + (returnDate != null ? returnDate : "-") +
                 " , Is Returned: " + returned +
                 " , Is Approved: " + approved;
     }

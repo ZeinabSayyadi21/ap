@@ -8,7 +8,7 @@ public class StudentManager {
     private List<Student> students;
 
     public StudentManager() {
-        students = FileManager.loadStudents();
+        students = DatabaseManager.loadStudents();
     }
 
     public List<Student> getStudents() {
@@ -29,7 +29,7 @@ public class StudentManager {
         Student newStudent = new Student(name, studentId, username, password);
         students.add(newStudent);
         System.out.println("Student registration completed successfully.");
-        FileManager.saveStudents(students);
+        DatabaseManager.saveStudents(students);
     }
 
    public Student authenticateStudent(String username, String password) {
@@ -49,7 +49,7 @@ public class StudentManager {
             student.setActive(!student.isActive());
             System.out.println("Student: " +student.getName()+ " is " +  (student.isActive() ? " Active " : " Inactive "));
 
-            FileManager.saveStudents(students);
+            DatabaseManager.saveStudents(students);
         } else {
             System.out.println("Student not found!");
         }

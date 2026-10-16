@@ -18,15 +18,25 @@ public class StatisticsManager {
         this.loans = loans;
     }
 
+    private LocalDate parseDate(String date) {
+        try {
+            return date == null ? null : LocalDate.parse(date);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public void showStatistics() {
         System.out.println("=== Library Statistics ===");
 
         int totalStudents = (int) students.stream().count();
         int totalBooks = (int) books.stream().count();
         int totalLoans = (int) loans.stream().count();
+        long availableBooks = books.stream().filter(Book::isAvailable).count();
 
         System.out.println("Total students: " +totalStudents);
         System.out.println("Total books: " +totalBooks);
+        System.out.println("Available books: " +availableBooks);
         System.out.println("Total loans: " +totalLoans);
     }
 
@@ -44,12 +54,9 @@ public class StatisticsManager {
         long lateReturns = studentLoans.stream()
                 .filter(Loan::isReturned)
                 .filter(l -> {
-                    if (l.getReturnDate() != null) {
-                        LocalDate returnDate = LocalDate.parse(l.getReturnDate());
-                        LocalDate endDate = l.getEndDateAsDate();
-                        return returnDate.isAfter(endDate);
-                    }
-                    return false;
+                    LocalDate returnDate = parseDate(l.getReturnDate());
+                    LocalDate endDate = parseDate(l.getEndDate());
+                    return returnDate != null && endDate != null && returnDate.isAfter(endDate);
                 })
                 .count();
 
@@ -93,16 +100,21 @@ public class StatisticsManager {
                 .count();
 
         List<Loan> completedLoans = loans.stream()
-                .filter(l -> l.getReturnDate() != null)
+                .filter(Loan::isReturned)
+                .filter(l -> parseDate(l.getReturnDate()) != null)
                 .collect(Collectors.toList());
 
         double avgLoanDays = 0;
         if (!completedLoans.isEmpty()) {
             avgLoanDays = completedLoans.stream()
                     .mapToLong(l -> {
-                        LocalDate received = LocalDate.parse(l.getReceivedDate());
-                        LocalDate returned = LocalDate.parse(l.getReturnDate());
-                        return ChronoUnit.DAYS.between(received, returned);
+                        LocalDate received = parseDate(l.getReceivedDate());
+                        if (received == null)
+                            received = parseDate(l.getStartDate());
+                        LocalDate returned = parseDate(l.getReturnDate());
+                        if (received == null || returned == null)
+                            return 0;
+                        return Math.max(ChronoUnit.DAYS.between(received, returned), 0);
                     })
                     .average()
                     .orElse(0);
@@ -130,8 +142,11 @@ public class StatisticsManager {
                             .count();
                     long lateReturns = studentLoans.stream()
                             .filter(Loan::isReturned)
-                            .filter(l -> l.getReturnDate() != null && l.getEndDate() != null &&
-                                    LocalDate.parse(l.getReturnDate()).isAfter(LocalDate.parse(l.getEndDate())))
+                            .filter(l -> {
+                                LocalDate returnDate = parseDate(l.getReturnDate());
+                                LocalDate endDate = parseDate(l.getEndDate());
+                                return returnDate != null && endDate != null && returnDate.isAfter(endDate);
+                            })
                             .count();
 
                     return new StudentStats(student, totalLoans, notReturned, lateReturns);

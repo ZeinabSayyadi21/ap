@@ -8,7 +8,7 @@ public class EmployeeManager {
     private List<Employee> employees;
 
     public EmployeeManager() {
-       employees = FileManager.loadEmployees();
+       employees = DatabaseManager.loadEmployees();
     }
 
     public List<Employee> getEmployees() {
@@ -41,19 +41,25 @@ public class EmployeeManager {
             return;
         }
         employee.setPassword(newPass);
-        FileManager.saveEmployees(employees);
+        DatabaseManager.saveEmployees(employees);
         System.out.println("Password changed successfully!");
     }
 
 
     public void addEmployee(Employee employee) {
         employees.add(employee);
-        FileManager.saveEmployees(employees);
+        DatabaseManager.saveEmployees(employees);
         System.out.println("Employee added successfully: " +employee.getName());
     }
 
     public void removeEmployee(String username) {
-        employees.removeIf(employee -> employee.getUsername().equals(username));
+        boolean removed = employees.removeIf(employee -> employee.getUsername().equals(username));
+        if (removed) {
+            DatabaseManager.saveEmployees(employees);
+            System.out.println("Employee removed successfully!");
+        } else {
+            System.out.println("No employee found with this username.");
+        }
     }
 
     public Employee getEmployeeById(String employeeId) {
